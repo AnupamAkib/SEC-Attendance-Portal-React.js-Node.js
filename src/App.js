@@ -1,24 +1,24 @@
-import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { ConfirmProvider } from 'material-ui-confirm';
+import Login from './components/Login';
+import Dashboard from './components/Dashboard';
+import Header from './components/Header';
+import Report from './components/admin/Report';
+import All_Employee from './components/admin/All_Employee';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Header />
+      <Routes>
+        <Route path='/' element={<Login />} />
+        <Route path='/attendance' element={<Dashboard />} />
+        <Route path='/admin/report' element={<Report />} />
+        <Route path='/admin/all_employee' element={<ConfirmProvider><All_Employee /></ConfirmProvider>} />
+      </Routes>
+
+    </BrowserRouter>
   );
 }
 

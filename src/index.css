@@ -1,13 +1,40 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  background-color: white;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.attendanceButtonBody {
+  background-color: whitesmoke;
+  padding: 15px;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+}
+
+.attendanceBtn {
+  padding: 20px 0px 20px 0px;
+  width: 100%;
+  font-size: 23px;
+  margin: 5px 0px 5px 0px;
+  font-weight: bold;
+  outline: none;
+  border: 0px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+}
+
+.timedate {
+  font-size: 23px;
+}
+
+.header {
+  background-image: linear-gradient(to right, darkblue, rgb(0, 0, 244));
+  background-color: darkblue;
+  color: white;
+  font-size: 22px;
+  padding: 10px;
+  font-weight: bold;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.4);
+}
+
+.login_box {
+  background-color: whitesmoke;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+  padding: 20px;
 }
