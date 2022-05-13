@@ -19,6 +19,11 @@ body {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
 }
 
+.attendanceBtn:hover {
+  background-color: #f0f0f0 !important;
+  transition: 0.2s;
+}
+
 .timedate {
   font-size: 23px;
 }
@@ -36,5 +41,21 @@ body {
 .login_box {
   background-color: whitesmoke;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
-  padding: 20px;
+  padding: 30px;
+  border-radius: 10px;
+}
+
+.addSEC_btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  height: 70px;
+  width: 70px;
+  font-size: 30px;
+  border-radius: 100%;
+  background-color: #2428ff;
+  border: 0px;
+  color: white;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+  outline: none;
 }

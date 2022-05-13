@@ -4,6 +4,15 @@ import axios from 'axios'
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { useConfirm } from 'material-ui-confirm';
+import Button from '@mui/material/Button';
+import LinearProgress from '@mui/material/LinearProgress';
+import CircularProgress from '@mui/material/CircularProgress';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import { useNavigate } from 'react-router-dom';
 
 const style = {
     position: 'absolute',
@@ -17,15 +26,25 @@ const style = {
 };
 
 export default function All_Employee() {
+    const navigate = useNavigate()
     const [empName, setEmpName] = useState("")
     const [empPass, setEmpPass] = useState("")
     const [empID, setEmpID] = useState("")
     const [empDayOff, setEmpDayOff] = useState("")
 
+    const [removebtnloading, setRemovebtnloading] = useState(false)
+
+    useEffect(() => {
+        if (localStorage.getItem("admin_logged_in") == "false") {
+            navigate("/admin")
+        }
+    }, [])
+
     const confirm = useConfirm();
     const handleClick = (e_name, e_id) => {
         confirm({ description: 'SEC ' + e_name + ' will be removed permanently!' })
             .then(() => {
+                setRemovebtnloading(true)
                 axios.post('https://flash-shop-server.herokuapp.com/SEC/removeEmployee', {
                     //parameter
                     empID: e_id
@@ -39,6 +58,8 @@ export default function All_Employee() {
                         else {
                             //something wrong
                         }
+                        setRemovebtnloading(false)
+                        handleClose()
                     }, (error) => {
                         console.log(error);
                     });
@@ -79,7 +100,7 @@ export default function All_Employee() {
     }, [loading_after_edit])
 
     const editEmp = (e) => {
-        setbtn_loading(true);
+        setRemovebtnloading(true);
         axios.post('https://flash-shop-server.herokuapp.com/SEC/editEmployee', {
             //parameter
             empName, empID, password: empPass, dayOff: empDayOff
@@ -87,7 +108,7 @@ export default function All_Employee() {
             .then((response) => {
                 //console.log(response.data.data)
                 setloading_after_edit((prev) => !prev);
-                setbtn_loading(false);
+                setRemovebtnloading(false);
                 handleClose();
             }, (error) => {
                 console.log(error);
@@ -95,15 +116,32 @@ export default function All_Employee() {
         e.preventDefault();
     }
 
+    function capital_letter(str) {
+        str = str.split(" ");
+
+        for (var i = 0, x = str.length; i < x; i++) {
+            str[i] = str[i][0].toUpperCase() + str[i].substr(1);
+        }
+
+        return str.join(" ");
+    }
+
     const addEmp = (e) => {
-        console.log(empName, empID, empDayOff, empPass)
+        setEmpName((prev) => capital_letter(prev))
+        let e_n = capital_letter(empName)
         setbtn_loading(true);
         axios.post('https://flash-shop-server.herokuapp.com/SEC/addEmployee', {
             //parameter
-            empName, empID, password: empPass, dayOff: empDayOff
+            empName: e_n, empID, password: empPass, dayOff: empDayOff
         })
             .then((response) => {
-                //console.log(response.data.data)
+                //console.log(response.data)
+                if (response.data.result == "done") {
+                    //success
+                }
+                else {
+                    alert("empID already exist")
+                }
                 setloading_after_edit((prev) => !prev);
                 setbtn_loading(false);
                 handleClose_add();
@@ -122,30 +160,33 @@ export default function All_Employee() {
                 <td>{allEmp[i].empName}</td>
                 <td>{allEmp[i].dayOff}</td>
                 <td>
-                    <button onClick={() => {
+                    <Button variant="contained" onClick={() => {
                         //console.log(allEmp[i].empName)
                         setEmpID(allEmp[i].empID);
                         setEmpName(allEmp[i].empName);
                         setEmpPass(allEmp[i].password);
                         setEmpDayOff(allEmp[i].dayOff);
                         handleOpen();
-                    }}>
-                        Edit
-                    </button>
-                    <button onClick={() => {
-                        handleClick(allEmp[i].empName, allEmp[i].empID)
-                    }}>REMOVE</button>
+                    }}>Edit
+                    </Button>
                 </td>
             </tr>
         )
     }
 
+
     return (
-        <div className='container'>
+        <div className='container col-9'>
             <h1 align='center'>
                 All SEC
             </h1>
-            {loading ? <h1>loading...</h1> :
+            {loading ?
+                <div className="col-5 container">
+                    <br /><br /><br />
+                    <font size="5">Please Wait</font>
+                    <LinearProgress />
+                </div>
+                :
                 <table className='table table-bordered'>
                     <thead>
                         <tr>
@@ -168,23 +209,40 @@ export default function All_Employee() {
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                 >
-                    <Box sx={style} className='col-6'>
+                    <Box sx={style} className='col-4'>
+                        <button style={{ float: "right", background: "transparent", border: "0px", fontSize: "large" }} onClick={handleClose}><i className="fa fa-close"></i></button>
+                        <h3>Edit SEC info</h3><hr />
                         <form onSubmit={editEmp}>
-                            <input onChange={(e) => { setEmpName(e.target.value) }} value={empName} required /><br />
-                            <input onChange={(e) => { setEmpID(e.target.value) }} value={empID} required /><br />
-                            <input onChange={(e) => { setEmpPass(e.target.value) }} value={empPass} required /><br />
+                            <TextField fullWidth onChange={(e) => { setEmpName(e.target.value) }} value={empName} label="SEC Name" variant="filled" InputProps={{ readOnly: true }} required /><br />
+                            <TextField fullWidth onChange={(e) => { setEmpID(e.target.value) }} value={empID} label="EmployeeID" variant="filled" InputProps={{ readOnly: true }} required /><br />
+                            <TextField fullWidth onChange={(e) => { setEmpPass(e.target.value) }} value={empPass} label="Password" variant="filled" required /><br />
 
-                            <select onChange={(e) => { setEmpDayOff(e.target.value) }} value={empDayOff} required>
-                                <option value='Saturday'>Saturday</option>
-                                <option value='Sunday'>Sunday</option>
-                                <option value='Monday'>Monday</option>
-                                <option value='Tuesday'>Tuesday</option>
-                                <option value='Wednesday'>Wednesday</option>
-                                <option value='Thursday'>Thursday</option>
-                                <option value='Friday'>Friday</option>
-                            </select>
-                            <br />
-                            <button type='submit'>{btn_loading ? "Please Wait" : "SAVE"}</button>
+
+                            <FormControl variant='filled' fullWidth>
+                                <InputLabel id="dayOff_label">Day Off</InputLabel>
+                                <Select
+                                    labelId='dayOff_label'
+                                    label="Day Off"
+                                    value={empDayOff}
+                                    onChange={(e) => { setEmpDayOff(e.target.value) }}
+                                >
+                                    <MenuItem value='Saturday'>Saturday</MenuItem>
+                                    <MenuItem value='Sunday'>Sunday</MenuItem>
+                                    <MenuItem value='Monday'>Monday</MenuItem>
+                                    <MenuItem value='Tuesday'>Tuesday</MenuItem>
+                                    <MenuItem value='Wednesday'>Wednesday</MenuItem>
+                                    <MenuItem value='Thursday'>Thursday</MenuItem>
+                                    <MenuItem value='Friday'>Friday</MenuItem>
+                                </Select>
+                            </FormControl>
+
+                            <br /><br />
+                            <center>
+                                <Button type='submit' variant="contained" disabled={removebtnloading} style={{ marginRight: "5px", width: "128px" }}>{removebtnloading ? "Working..." : <font size="3"><i className="fa fa-save" style={{ marginRight: "5px" }}></i> SAVE</font>}</Button>
+                                <Button variant="contained" color="error" onClick={() => {
+                                    handleClick(empName, empID)
+                                }} disabled={removebtnloading} style={{ width: "128px" }}>{removebtnloading ? "Working..." : <font size="3"><i className="fa fa-trash-o" style={{ marginRight: "5px" }}></i> REMOVE</font>}</Button>
+                            </center>
                         </form>
                     </Box>
                 </Modal>
@@ -196,29 +254,41 @@ export default function All_Employee() {
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                 >
-                    <Box sx={style} className='col-6'>
+                    <Box sx={style} className='col-4'>
+                        <button style={{ float: "right", background: "transparent", border: "0px", fontSize: "large" }} onClick={handleClose_add}><i className="fa fa-close"></i></button>
+                        <h3>Add New SEC</h3><hr />
                         <form onSubmit={addEmp}>
-                            <input onChange={(e) => { setEmpName(e.target.value) }} value={empName} placeholder="SEC Name" required /><br />
-                            <input onChange={(e) => { setEmpID(e.target.value) }} value={empID} placeholder="SEC Employee ID" required /><br />
-                            <input onChange={(e) => { setEmpPass(e.target.value) }} value={empPass} placeholder="Password" required /><br />
+                            <TextField fullWidth onChange={(e) => { setEmpName(e.target.value) }} value={empName} placeholder="SEC Name" label="SEC Name" variant="filled" required /><br />
+                            <TextField fullWidth onChange={(e) => { setEmpID(e.target.value) }} value={empID} placeholder="SEC EmployeeID" label="SEC EmployeeID" variant="filled" required /><br />
+                            <TextField fullWidth onChange={(e) => { setEmpPass(e.target.value) }} value={empPass} placeholder="Password" label="Password" variant="filled" required /><br />
 
-                            <select onChange={(e) => { setEmpDayOff(e.target.value) }} value={empDayOff} required>
-                                <option value='Saturday'>Saturday</option>
-                                <option value='Sunday'>Sunday</option>
-                                <option value='Monday'>Monday</option>
-                                <option value='Tuesday'>Tuesday</option>
-                                <option value='Wednesday'>Wednesday</option>
-                                <option value='Thursday'>Thursday</option>
-                                <option value='Friday'>Friday</option>
-                            </select>
-                            <br />
-                            <button type='submit'>{btn_loading ? "Please Wait" : "ADD"}</button>
+                            <FormControl variant='filled' fullWidth>
+                                <InputLabel id="dayOff_label">Day Off</InputLabel>
+                                <Select
+                                    labelId='dayOff_label'
+                                    label="Day Off"
+                                    value={empDayOff}
+                                    onChange={(e) => { setEmpDayOff(e.target.value) }}
+                                >
+                                    <MenuItem value='Saturday'>Saturday</MenuItem>
+                                    <MenuItem value='Sunday'>Sunday</MenuItem>
+                                    <MenuItem value='Monday'>Monday</MenuItem>
+                                    <MenuItem value='Tuesday'>Tuesday</MenuItem>
+                                    <MenuItem value='Wednesday'>Wednesday</MenuItem>
+                                    <MenuItem value='Thursday'>Thursday</MenuItem>
+                                    <MenuItem value='Friday'>Friday</MenuItem>
+                                </Select>
+                            </FormControl>
+                            <br /><br />
+                            <center>
+                                <Button type='submit' variant="contained" disabled={btn_loading}>{btn_loading ? "Please Wait" : <font size='3'><i className="fa fa-plus-square" style={{ marginRight: "5px" }}></i>ADD {empName.split(" ")[empName.split(" ").length - 1]}</font>}</Button>
+                            </center>
                         </form>
                     </Box>
                 </Modal>
             </div>
 
-            <button onClick={handleOpen_add}>ADD</button>
+            <button onClick={handleOpen_add} className="addSEC_btn"><i className="fa fa-plus"></i></button>
         </div>
     )
 }

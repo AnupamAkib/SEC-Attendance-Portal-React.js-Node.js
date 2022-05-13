@@ -4,17 +4,22 @@ import { ConfirmProvider } from 'material-ui-confirm';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Header from './components/Header';
+import MuiHeader from './components/MuiHeader';
 import Report from './components/admin/Report';
 import All_Employee from './components/admin/All_Employee';
+import ChangeLocation from './components/admin/ChangeLocation';
+import AdminLogin from './components/admin/Login';
 
 function App() {
   return (
     <BrowserRouter>
-      <Header />
+      <MuiHeader />
       <Routes>
         <Route path='/' element={<Login />} />
-        <Route path='/attendance' element={<Dashboard />} />
+        <Route path='/attendance' element={<ConfirmProvider><Dashboard /></ConfirmProvider>} />
         <Route path='/admin/report' element={<Report />} />
+        <Route path='/admin' element={<AdminLogin />} />
+        <Route path='/admin/showroom_location' element={<ChangeLocation />} />
         <Route path='/admin/all_employee' element={<ConfirmProvider><All_Employee /></ConfirmProvider>} />
       </Routes>
 

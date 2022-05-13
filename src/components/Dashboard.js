@@ -3,6 +3,9 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Navigate, useNavigate } from "react-router-dom";
 import Statistics from './Statistics';
+import Button from '@mui/material/Button';
+import { useConfirm } from 'material-ui-confirm';
+import LinearProgress from '@mui/material/LinearProgress';
 
 export default function Dashboard() {
     const navigate = useNavigate();
@@ -23,7 +26,6 @@ export default function Dashboard() {
                 //console.log("Latitude: " + pos.coords.latitude)
                 //console.log("Longitude: " + pos.coords.longitude)
                 //console.log(pos.coords.accuracy);
-
                 setGeoLocation([pos.coords.latitude, pos.coords.longitude])
                 setloading_your_location(false)
             });
@@ -31,7 +33,7 @@ export default function Dashboard() {
     }
 
     useEffect(() => {
-        setInterval(() => getLocation(), 1000);
+        setInterval(() => getLocation(), 500);
     }, []);
 
     const [showroomLocation, setShowroomLocation] = useState({
@@ -49,7 +51,7 @@ export default function Dashboard() {
         })
             .then((response) => {
                 setShowroomLocation(response.data[0]);
-                console.log(response.data[0])
+                //console.log(response.data[0])
                 setloading_location(false)
             }, (error) => {
                 console.log(error);
@@ -63,9 +65,8 @@ export default function Dashboard() {
     const [attendanceStatus, setAttendanceStatus] = useState("")
     const [loading_info, setLoading_info] = useState(true)
     const [loading_attendance, setLoading_attendance] = useState(true)
-    //let methods = require("./methods.js");
 
-    //Time & Date
+
     const [timedate, settimedate] = useState(new Date());
     useEffect(() => {
         setInterval(() => settimedate(new Date()), 1000);
@@ -111,7 +112,6 @@ export default function Dashboard() {
         })
             .then((response) => {
                 //console.log(response.data)
-
                 let res = response.data;
                 if (res.result == "done") {
                     setEmpName(response.data.empName);
@@ -141,7 +141,6 @@ export default function Dashboard() {
                 setAttendanceStatus(response.data.status);
                 if (response.data.status == "not given") {
                     setAlreadyAttendanceGiven(false)
-
                 }
                 else {
                     setAlreadyAttendanceGiven(true)
@@ -152,9 +151,9 @@ export default function Dashboard() {
             });
     }, [])
 
-
+    const confirm = useConfirm();
     const giveAttendance = (e) => {
-        setLoading_attendance(true)
+        e.preventDefault();
         let time = getTime();
         if (status == "Present") {
             setStatus(getTime());
@@ -162,22 +161,26 @@ export default function Dashboard() {
         let day = getDay();
         let month = getMonth();
         let year = getYear();
-        axios.post('https://flash-shop-server.herokuapp.com/SEC/mark', {
-            //parameters
-            empID, day, month, year, time, status
-        })
-            .then((response) => {
-                if (response.data.success == true) {
-                    setAlreadyAttendanceGiven(true);
-                    setAttendanceStatus(status == "Present" ? time : status)
-                    setLoading_attendance(false)
-                }
+        confirm({ description: "Attendance will be saved as \"" + status + "\" & you can not change it later." })
+            .then(() => {
+                setLoading_attendance(true)
+                axios.post('https://flash-shop-server.herokuapp.com/SEC/mark', {
+                    //parameters
+                    empID, day, month, year, time, status
+                })
+                    .then((response) => {
+                        if (response.data.success == true) {
+                            setAlreadyAttendanceGiven(true);
+                            setAttendanceStatus(status == "Present" ? time : status)
+                            setLoading_attendance(false)
+                        }
 
-            }, (error) => {
-                console.log(error);
-            });
+                    }, (error) => {
+                        console.log(error);
+                    });
+            })
+            .catch(() => { /* ... */ });
 
-        e.preventDefault();
     }
 
     const logoutMe = () => {
@@ -185,24 +188,9 @@ export default function Dashboard() {
         navigate("/")
     }
 
-
-    /*const check_location = () => {
-        //console.log("loc")
-        //console.log(showroomLocation)
-        //if(Math.abs(showroomLocation.latitude - geoLocation[0]) <= showroomLocation.range * 0.00001)
-        return (
-            <div>aaa</div>
-        )
-    }*/
-    const check_location = () => {
-        return "A"
-    }
-
     let distance = Math.sqrt((showroomLocation.latitude - geoLocation[0]) * (showroomLocation.latitude - geoLocation[0]) + (showroomLocation.longitude - geoLocation[1]) * (showroomLocation.longitude - geoLocation[1]));
     return (
         <div className='container col-6'>
-
-            latitude: {geoLocation[0]}<br />longitude: {geoLocation[1]}
 
             <img src='done.png' width='0px' />
             <div align='center' className='timedate'>
@@ -211,13 +199,26 @@ export default function Dashboard() {
             </div>
 
             {loading_attendance || loading_info ?
-                <h3>fetching data...</h3>
+                <div>
+                    <br />
+                    <font size="5">Please Wait</font>
+                    <LinearProgress />
+                </div>
                 :
                 <>
                     <div className='attendanceButtonBody'>
-                        SEC Name: <b>{empName}</b><br />
-                        EmployeeID: <b>{empID}</b><br />
-                        Day Off : <b>{dayOff}</b>
+                        <table border="0" width="100%">
+                            <tbody>
+                                <tr><td colSpan={2}>SEC Name: <b>{empName}</b></td></tr>
+                                <tr><td colSpan={2}>EmployeeID: <b>{empID}</b></td></tr>
+                                <tr>
+                                    <td>Day Off : <b>{dayOff}</b></td>
+                                    <td align='right'><Button onClick={logoutMe} variant="outlined" size="small"><i className="fa fa-sign-out" style={{ marginRight: "5px" }}></i> LOGOUT</Button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
                     </div><br />
 
                     {alreadyAttendanceGiven ?
@@ -226,7 +227,7 @@ export default function Dashboard() {
                                 <div className='attendanceButtonBody'>
                                     <h4 align='center'>Todays Attendance</h4><hr />
                                     <img src='done.png' width='90px' />
-                                    <h3>Already Submitted</h3>
+                                    <h3><b>Attendance Submitted</b></h3>
 
                                     <table className="table table-bordered" width="100%" border="1px" cellSpacing="0px" cellPadding="9px">
                                         <thead>
@@ -259,7 +260,7 @@ export default function Dashboard() {
                                         (distance <= showroomLocation.range * 0.00001) ?
                                             <button style={{ background: "#87fc7e" }} onClick={() => { setStatus("Present") }} className='attendanceBtn' disabled={loading_location ? true : false}>{loading_location ? "Locating showroom..." : "PRESENT"}</button>
                                             :
-                                            <button className='attendanceBtn' disabled={true}>{loading_your_location ? "Locating your position..." : <font color='red'>You are away from showroom</font>}<br />{distance / 0.00001} m</button>
+                                            <button className='attendanceBtn' disabled={true}>{loading_your_location ? "Locating your position..." : <font color='red'>You are {(distance / 0.00001).toFixed(2)} meter away from showroom</font>}</button>
                                     }
                                     <br />
                                     <button style={{ background: "#c1bfff" }} onClick={() => { setStatus("Day Off") }} className='attendanceBtn'>DAY OFF</button><br />
@@ -274,14 +275,7 @@ export default function Dashboard() {
 
             <br />
 
-            <button onClick={logoutMe}>LOGOUT</button>
-        </div>
+
+        </div >
     )
 }
-/*
-
-(check_location) ? 
-:"d"
-                                    
-
-*/

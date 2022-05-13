@@ -7,6 +7,11 @@ import Modal from '@mui/material/Modal';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import Button from '@mui/material/Button';
+import LinearProgress from '@mui/material/LinearProgress';
+import CircularProgress from '@mui/material/CircularProgress';
+import TextField from '@mui/material/TextField';
+import { Navigate, useNavigate } from "react-router-dom";
 
 const style = {
     position: 'absolute',
@@ -47,6 +52,7 @@ function daysInMonth(month, year) {
 }
 
 export default function Report() {
+    const navigate = useNavigate();
     const [month, setMonth] = useState(month_name[d.getMonth()]);
     const [monthTmp, setMonthTmp] = useState(month_name[d.getMonth()]);
     const [year, setYear] = useState(d.getFullYear() + "");
@@ -58,9 +64,17 @@ export default function Report() {
     const [takeTime, setTakeTime] = useState("")
     const [loading_after_edit, setloading_after_edit] = useState(false)
 
+    const [individualChangeLoading, setIndividualChangeLoading] = useState(false)
+
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => { setOpen(true); }
     const handleClose = () => { setTakeTime(false); setOpen(false); }
+
+    useEffect(() => {
+        if (localStorage.getItem("admin_logged_in") == "false") {
+            navigate("/admin")
+        }
+    }, [])
 
     useEffect(() => {
         if (stateValue.status == "Present") {
@@ -104,14 +118,25 @@ export default function Report() {
     details = [];
     tmp = []
     report_header = []
-    tmp.push(<th>SEC Name</th>)
+    tmp.push(<th style={{ background: "#fffc99" }}>SEC Name</th>)
     let x = daysInMonth(month, year)
     for (let i = 0; i < x; i++) {
-        tmp.push(<th>{(i + 1) + "-" + month[0] + month[1] + month[2] + "-" + year[2] + year[3]}</th>)
+        tmp.push(<th style={{ background: "#bae1ff" }}>{(i + 1) + "-" + month[0] + month[1] + month[2] + "-" + year[2] + year[3]}</th>)
     }
     report_header.push(<tr align='center'>{tmp}</tr>)
 
-    const changeValue = () => {
+    const changeValue = (q) => {
+        //console.log(q)
+        q = q.split(" ");
+        let z = q[0].split(":");
+        if (q[1] == "PM" && z[0] != "12") {
+            z[0] = parseInt(z[0])
+            z[0] += 12;
+        }
+        else if (q[1] == "AM" && z[0] == "12") {
+            z[0] = "00";
+        }
+        setTakeTime(z[0] + ":" + z[1])
         handleOpen();
     }
 
@@ -120,7 +145,7 @@ export default function Report() {
         tmp = [];
         let dayOff = [];
         let sickLeave = [], workingDay = 0;
-        tmp.push(<td><font color="darkgreen"><b>{attendance[i].empName}</b></font></td>)
+        tmp.push(<td style={{ background: "#fffc99" }}><font color="#000"><b>{attendance[i].empName}</b></font></td>)
         let status = attendance[i].status;
         let x = daysInMonth(month, year)
         for (let j = 0; j < x; j++) {
@@ -133,7 +158,7 @@ export default function Report() {
                     year: year,
                     status: status[j]
                 })
-                changeValue()
+                changeValue(status[j])
             }}>{status[j]}</td>)
 
             if (status[j] == "Day Off") dayOff.push(j + 1);
@@ -152,26 +177,27 @@ export default function Report() {
     const monthYearChange = (e) => {
         setYear(yearTmp);
         setMonth(monthTmp);
-        console.log(year)
+        //console.log(year)
         e.preventDefault();
     }
 
     const changeIndividual = (e) => {
-        //setStateValue({ ...stateValue, status: takeTime })
-        console.log(stateValue)
+        //console.log(stateValue)
+        setIndividualChangeLoading(true)
         axios.post('https://flash-shop-server.herokuapp.com/SEC/editAttendanceIndividual', {
             empID: stateValue.empID, day: stateValue.day + "", month: stateValue.month, year: stateValue.year, new_status: stateValue.status
         })
             .then((response) => {
                 //done
-                console.log(stateValue)
-                console.log(response.data)
+                //console.log(stateValue)
+                //console.log(response.data)
+                setIndividualChangeLoading(false)
+                handleClose()
                 setloading_after_edit((prev) => !prev);
             }, (error) => {
                 //something wrong
                 setloading(false)
             });
-        handleClose()
         e.preventDefault();
     }
 
@@ -179,47 +205,92 @@ export default function Report() {
         <div className='container'>
             <h2 align='center'>SEC Attendance Report</h2>
             <form onSubmit={monthYearChange}>
-                <select onChange={(e) => { setMonthTmp(e.target.value) }}>
-                    <option value="January" selected={month == "January"}>January</option>
-                    <option value="February" selected={month == "February"}>February</option>
-                    <option value="March" selected={month == "March"}>March</option>
-                    <option value="April" selected={month == "April"}>April</option>
-                    <option value="May" selected={month == "May"}>May</option>
-                    <option value="June" selected={month == "June"}>June</option>
-                    <option value="July" selected={month == "July"}>July</option>
-                    <option value="August" selected={month == "August"}>August</option>
-                    <option value="September" selected={month == "September"}>September</option>
-                    <option value="October" selected={month == "October"}>October</option>
-                    <option value="November" selected={month == "November"}>November</option>
-                    <option value="December" selected={month == "December"}>December</option>
-                </select>
-                <select onChange={(e) => { setYearTmp(e.target.value) }}>
-                    <option value="2022" selected={year == "2022"}>2022</option>
-                    <option value="2023" selected={year == "2023"}>2023</option>
-                    <option value="2024" selected={year == "2024"}>2024</option>
-                    <option value="2025" selected={year == "2025"}>2025</option>
-                </select>
-                <button type="submit">Find</button>
+                <center>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <Select
+                                        label="Month"
+                                        variant="filled"
+                                        value={monthTmp}
+                                        onChange={(e) => { setMonthTmp(e.target.value) }}
+                                    >
+                                        <MenuItem value="January">January</MenuItem>
+                                        <MenuItem value="February">February</MenuItem>
+                                        <MenuItem value="March">March</MenuItem>
+                                        <MenuItem value="April">April</MenuItem>
+                                        <MenuItem value="May">May</MenuItem>
+                                        <MenuItem value="June">June</MenuItem>
+                                        <MenuItem value="July">July</MenuItem>
+                                        <MenuItem value="August">August</MenuItem>
+                                        <MenuItem value="September">September</MenuItem>
+                                        <MenuItem value="October">October</MenuItem>
+                                        <MenuItem value="November">November</MenuItem>
+                                        <MenuItem value="December" >December</MenuItem>
+                                    </Select>
+                                </td>
+                                <td>
+                                    <Select
+                                        value={yearTmp}
+                                        label="Year"
+                                        variant="filled"
+                                        onChange={(e) => { setYearTmp(e.target.value) }}
+                                    >
+                                        <MenuItem value="2022">2022</MenuItem>
+                                        <MenuItem value="2023">2023</MenuItem>
+                                        <MenuItem value="2024">2024</MenuItem>
+                                        <MenuItem value="2025">2025</MenuItem>
+                                    </Select>
+                                </td>
+                                <td>
+                                    <Button type="submit" variant="contained" style={{ padding: "15px 0px" }}>VIEW</Button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </center>
             </form>
-            {loading ? <h2>Loading...</h2> :
+
+            <button onClick={() => navigate("/admin/report")}>Attendance Report</button>
+            <button onClick={() => navigate("/admin/all_employee")}>All Employee</button>
+            <button onClick={() => navigate("/admin/showroom_location")}>Change Showroom Location</button>
+            <button onClick={() => { localStorage.setItem("admin_logged_in", "false"); navigate("/admin") }}>Logout</button>
+
+            {loading ?
+                <div className='container col-4'>
+                    <br /><br /><br />
+                    <font size="5">Please Wait</font>
+                    <LinearProgress />
+                </div>
+                :
                 <div className="table-responsive">
                     {notFound ?
-                        <h2>NOT FOUND</h2>
+                        <>
+                            <br />
+                            <div style={{ background: "#f0f0f0", margin: "30px", padding: "30px" }}>
+                                <h2 align='center'>No Record Found!</h2>
+                            </div>
+                        </>
                         :
                         <>
-                            <ReactHTMLTableToExcel
-                                id="test-table-xls-button"
-                                className="download-table-xls-button"
-                                table="table-to-xls"
-                                filename={"SEC_Attendance_Report_" + month + year}
-                                sheet="tablexls"
-                                buttonText="Download Report as XLS" />
+                            <br />
+                            <center>
+                                <ReactHTMLTableToExcel
+                                    id="test-table-xls-button"
+                                    className="download-table-xls-button btn btn-primary"
+                                    table="table-to-xls"
+                                    filename={"SEC_Attendance_Report_" + month + year}
+                                    sheet="tablexls"
+                                    buttonText={<><i className="fa fa-download" style={{ marginRight: "5px" }}></i> Download Report as XLS</>}
+                                />
+                            </center>
 
 
                             <table className='table table-striped table-bordered' width="100%" border="1" id="table-to-xls">
                                 <thead>
                                     <tr><td colSpan={daysInMonth(month, year) + 1}><br />
-                                        <font size='4'><b>Pragati Sarani SEC Attendance</b></font>
+                                        <font size='4'><b>Pragati Sarani SEC Attendance ({month}, {year})</b></font>
                                         <br /><br /></td></tr>
                                     {report_header}
                                 </thead>
@@ -253,6 +324,13 @@ export default function Report() {
 
                                         </tr>
                                     )}
+                                    <tr>
+                                        <td colSpan={daysInMonth(month, year) + 1} align='center'>
+                                            Generated by <b>SEC Portal App</b><br />
+                                            Date: {d.getDate() + " " + month_name[d.getMonth()] + ", " + d.getFullYear()}<br />
+                                            Made by <a href="http://facebook.com/anupam.akib">Mir Anupam Hossain Akib</a>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table></>
                     }
@@ -268,14 +346,13 @@ export default function Report() {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={style} className='col-6'>
-                    {stateValue.empName}<br />
-                    {stateValue.empID}<br />
-                    {stateValue.day + " " + stateValue.month + ", " + stateValue.year}
-                    <br />
+                <Box sx={style} className='col-4'>
+                    <button style={{ float: "right", background: "transparent", border: "0px", fontSize: "large", marginTop: "-10px" }} onClick={handleClose}><i className="fa fa-close"></i></button>
+                    SEC Name: <b>{stateValue.empName}</b><br />
+                    EmployeeID: <b>{stateValue.empID}</b><br />
+                    Date: <b>{stateValue.day + " " + stateValue.month + ", " + stateValue.year}</b>
+                    <br />Status:
                     <form onSubmit={changeIndividual}>
-
-                        <InputLabel id="demo-simple-select-label">Status</InputLabel>
                         <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
@@ -291,7 +368,7 @@ export default function Report() {
                             <MenuItem value="Day Off">Day Off</MenuItem>
                         </Select>
                         {(stateValue.status == "Present" || (stateValue.status != "-" && stateValue.status != "Sick Leave" && stateValue.status != "Day Off")) ?
-                            <input onChange={(e) => {
+                            <TextField onChange={(e) => {
                                 let t = e.target.value;
                                 let mh = t.split(":");
                                 let hours = mh[0];
@@ -304,10 +381,13 @@ export default function Report() {
                                 strTime = hours + ':' + minutes + ' ' + ampm;
                                 setTakeTime(e.target.value)
                                 setStateValue({ ...stateValue, status: strTime })
-                            }} value={takeTime} placeholder="10:35 AM" type="time" required /> : ""}
+                            }} value={takeTime} placeholder="10:35 AM" type="time" label="Time" variant="filled" required /> : ""}
 
-                        <br />
-                        <button type='submit'>SAVE</button>
+                        <br /><br />
+                        <center>
+                            <Button type='submit' variant="contained" style={{ width: "120px", marginRight: "5px" }} disabled={individualChangeLoading}>{individualChangeLoading ? "Loading" : "SAVE"}</Button>
+                            <Button variant="outlined" onClick={handleClose} style={{ width: "120px" }}>Cancel</Button>
+                        </center>
                     </form>
                 </Box>
             </Modal>

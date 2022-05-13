@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function Statistics(props) {
     let empID = props.empID;
@@ -60,7 +61,10 @@ export default function Statistics(props) {
     }
     if (loading) {
         return (
-            <h3>Loading...</h3>
+            <div align='center'><br /><br />
+                <CircularProgress /><br />
+                <font size="4">Loading</font>
+            </div>
         )
     }
     return (
