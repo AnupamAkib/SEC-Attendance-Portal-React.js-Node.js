@@ -16,7 +16,7 @@ export default function ChangeLocation() {
     const [loading, setloading] = useState(false)
 
     useEffect(() => {
-        if (localStorage.getItem("admin_logged_in") == "false") {
+        if (localStorage.getItem("admin_logged_in") != "true") {
             navigate("/admin")
         }
     }, [])
@@ -35,6 +35,8 @@ export default function ChangeLocation() {
                 setloading(false)
             }, (error) => {
                 console.log(error);
+                let toast = require("../toast_bar")
+                toast.msg("something wrong", "red", 3000)
             });
     }, [])
 
@@ -55,12 +57,13 @@ export default function ChangeLocation() {
             latitude, longitude, range, id: key
         })
             .then((response) => {
-                //console.log(response.data);
-                //success
+                let toast = require("../toast_bar")
+                toast.msg("Changes saved successfully", "green", 3000)
                 setloading(false)
             }, (error) => {
                 console.log(error);
-                //error
+                let toast = require("../toast_bar")
+                toast.msg("try again", "red", 3000)
             });
     }
 

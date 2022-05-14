@@ -13,6 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { Navigate, useNavigate } from "react-router-dom";
+import { useState, useEffect } from 'react';
 
 const ResponsiveAppBar = () => {
     const navigate = useNavigate();
@@ -34,84 +35,189 @@ const ResponsiveAppBar = () => {
         setAnchorElUser(null);
     };
 
+    const [curPath, setCurPath] = useState("");
+    useEffect(() => {
+        setInterval(() => setCurPath(getPath()), 250);
+    }, [])
+
+    function getPath() {
+        let path = window.location.pathname;
+        let who = path.split("/");
+        return who[1];
+    }
+
     return (
-        <AppBar position="static">
-            <Container maxWidth="xl">
-                <Toolbar disableGutters>
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        sx={{
-                            mr: 2,
-                            display: { xs: 'none', md: 'flex' },
-                            color: 'white',
-                            textDecoration: 'none',
-                        }}
-                    >
-                        SEC Portal
-                    </Typography>
-
-                    <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-                        <IconButton
-                            size="large"
-                            aria-label="account of current user"
-                            aria-controls="menu-appbar"
-                            aria-haspopup="true"
-                            onClick={handleOpenNavMenu}
-                            color="inherit"
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Menu
-                            id="menu-appbar"
-                            anchorEl={anchorElNav}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'left',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'left',
-                            }}
-                            open={Boolean(anchorElNav)}
-                            onClose={handleCloseNavMenu}
+        <>
+            <AppBar position="static">
+                <Container maxWidth="xl">
+                    <Toolbar disableGutters>
+                        <Typography
+                            variant="h6"
+                            noWrap
                             sx={{
-                                display: { xs: 'block', md: 'none' },
+                                mr: 5,
+                                display: { xs: 'none', md: 'flex' },
+                                color: 'white',
+                                textDecoration: 'none',
                             }}
                         >
-                            <MenuItem onClick={() => navigate("/admin/report")}>
-                                Report
-                            </MenuItem>
-                            <MenuItem>
-                                two
-                            </MenuItem>
-                        </Menu>
-                    </Box>
-                    <Typography
-                        variant="h5"
-                        noWrap
-                        sx={{
-                            mr: 2, flexGrow: 1,
-                            display: { xs: 'flex', md: 'none' },
-                            color: 'white',
-                            textDecoration: 'none',
-                        }}
-                    >
-                        SEC Portal
-                    </Typography>
-                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                        <Button sx={{ my: 2, color: 'white', display: 'block' }}>one</Button>
-                        <Button sx={{ my: 2, color: 'white', display: 'block' }}>two</Button>
-                        <Button sx={{ my: 2, color: 'white', display: 'block' }}>three</Button>
-                    </Box>
+                            SEC Portal
+                        </Typography>
 
-                    <Box sx={{ flexGrow: 0 }}>
-                        Logout
-                    </Box>
-                </Toolbar>
-            </Container>
-        </AppBar>
+                        <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+                            <IconButton
+                                size="large"
+                                aria-label="account of current user"
+                                aria-controls="menu-appbar"
+                                aria-haspopup="true"
+                                onClick={handleOpenNavMenu}
+                                color="inherit"
+                            >
+                                <MenuIcon />
+                            </IconButton>
+
+                            {
+                                curPath == "admin" ?
+                                    localStorage.getItem("admin_logged_in") == "true" ?
+                                        <Menu
+                                            id="menu-appbar"
+                                            anchorEl={anchorElNav}
+                                            anchorOrigin={{
+                                                vertical: 'bottom',
+                                                horizontal: 'left',
+                                            }}
+                                            keepMounted
+                                            transformOrigin={{
+                                                vertical: 'top',
+                                                horizontal: 'left',
+                                            }}
+                                            open={Boolean(anchorElNav)}
+                                            onClose={handleCloseNavMenu}
+                                            sx={{
+                                                display: { xs: 'block', md: 'none' },
+                                            }}
+                                        >
+                                            <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/admin/report") }}>Report</MenuItem>
+                                            <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/admin/all_employee") }}>All SEC</MenuItem>
+                                            <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/admin/showroom_location") }}>Showroom Location</MenuItem>
+                                            <MenuItem onClick={() => { localStorage.setItem("admin_logged_in", "false"); handleCloseNavMenu(); navigate("/admin") }}>Logout</MenuItem>
+                                        </Menu>
+                                        :
+                                        <Menu
+                                            id="menu-appbar"
+                                            anchorEl={anchorElNav}
+                                            anchorOrigin={{
+                                                vertical: 'bottom',
+                                                horizontal: 'left',
+                                            }}
+                                            keepMounted
+                                            transformOrigin={{
+                                                vertical: 'top',
+                                                horizontal: 'left',
+                                            }}
+                                            open={Boolean(anchorElNav)}
+                                            onClose={handleCloseNavMenu}
+                                            sx={{
+                                                display: { xs: 'block', md: 'none' },
+                                            }}
+                                        >
+                                            <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/admin") }}>Login</MenuItem>
+                                        </Menu>
+
+                                    :
+                                    localStorage.getItem("empID") != null ?
+                                        <Menu
+                                            id="menu-appbar"
+                                            anchorEl={anchorElNav}
+                                            anchorOrigin={{
+                                                vertical: 'bottom',
+                                                horizontal: 'left',
+                                            }}
+                                            keepMounted
+                                            transformOrigin={{
+                                                vertical: 'top',
+                                                horizontal: 'left',
+                                            }}
+                                            open={Boolean(anchorElNav)}
+                                            onClose={handleCloseNavMenu}
+                                            sx={{
+                                                display: { xs: 'block', md: 'none' },
+                                            }}
+                                        >
+                                            <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/attendance") }}>My Attendance</MenuItem>
+                                            <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/change_password") }}>Change Password</MenuItem>
+                                            <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/admin") }}>Admin Panel</MenuItem>
+                                        </Menu>
+                                        :
+                                        <Menu
+                                            id="menu-appbar"
+                                            anchorEl={anchorElNav}
+                                            anchorOrigin={{
+                                                vertical: 'bottom',
+                                                horizontal: 'left',
+                                            }}
+                                            keepMounted
+                                            transformOrigin={{
+                                                vertical: 'top',
+                                                horizontal: 'left',
+                                            }}
+                                            open={Boolean(anchorElNav)}
+                                            onClose={handleCloseNavMenu}
+                                            sx={{
+                                                display: { xs: 'block', md: 'none' },
+                                            }}
+                                        >
+                                            <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/") }}>Login</MenuItem>
+                                            <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/admin") }}>Admin Panel</MenuItem>
+                                        </Menu>
+                            }
+
+                        </Box>
+
+                        <Typography
+                            variant="h5"
+                            noWrap
+                            sx={{
+                                mr: 6, flexGrow: 1,
+                                display: { xs: 'flex', md: 'none' },
+                                color: 'white',
+                                textDecoration: 'none',
+                            }}
+                        >
+                            SEC Portal
+                        </Typography>
+                        {
+                            curPath == "admin" ?
+                                localStorage.getItem("admin_logged_in") == "true" ?
+                                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                                        <Button onClick={() => navigate("/admin/report")} sx={{ my: 2, color: 'white', display: 'block', mr: 3 }}>Report</Button>
+                                        <Button onClick={() => navigate("/admin/all_employee")} sx={{ my: 2, color: 'white', display: 'block', mr: 3 }}>All Sec</Button>
+                                        <Button onClick={() => navigate("/admin/showroom_location")} sx={{ my: 2, color: 'white', display: 'block', mr: 3 }}>Showroom location</Button>
+                                        <Button onClick={() => { localStorage.setItem("admin_logged_in", "false"); navigate("/admin") }} sx={{ my: 2, color: 'white', display: 'block', mr: 3 }}>logout</Button>
+                                    </Box>
+                                    :
+                                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                                        <Button onClick={() => navigate("/admin")} sx={{ my: 2, color: 'white', display: 'block', mr: 3 }}>Login</Button>
+                                    </Box>
+
+                                :
+                                localStorage.getItem("empID") != null ?
+                                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                                        <Button onClick={() => navigate("/attendance")} sx={{ my: 2, color: 'white', display: 'block', mr: 3 }}>My Attendance</Button>
+                                        <Button onClick={() => navigate("/change_password")} sx={{ my: 2, color: 'white', display: 'block', mr: 3 }}>Change password</Button>
+                                        <Button onClick={() => navigate("/admin")} sx={{ my: 2, color: 'white', display: 'block', mr: 3 }}>Admin panel</Button>
+                                    </Box>
+                                    :
+                                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                                        <Button onClick={() => navigate("/")} sx={{ my: 2, color: 'white', display: 'block', mr: 3 }}>Login</Button>
+                                        <Button onClick={() => navigate("/admin")} sx={{ my: 2, color: 'white', display: 'block', mr: 3 }}>Admin panel</Button>
+                                    </Box>
+                        }
+
+                    </Toolbar>
+                </Container>
+            </AppBar>
+            <br /></>
     );
 };
 export default ResponsiveAppBar;

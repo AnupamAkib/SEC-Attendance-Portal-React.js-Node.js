@@ -12,6 +12,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
 import { Navigate, useNavigate } from "react-router-dom";
+import FormControl from '@mui/material/FormControl';
 
 const style = {
     position: 'absolute',
@@ -71,7 +72,7 @@ export default function Report() {
     const handleClose = () => { setTakeTime(false); setOpen(false); }
 
     useEffect(() => {
-        if (localStorage.getItem("admin_logged_in") == "false") {
+        if (localStorage.getItem("admin_logged_in") != "true") {
             navigate("/admin")
         }
     }, [])
@@ -95,6 +96,8 @@ export default function Report() {
                 setAttendance(response.data.data);
                 if (response.data.data.length == 0) {
                     setNotFound(true)
+                    let toast = require("../toast_bar")
+                    toast.msg("Not Found", "red", 3000)
                 }
                 else {
                     setNotFound(false)
@@ -194,9 +197,13 @@ export default function Report() {
                 setIndividualChangeLoading(false)
                 handleClose()
                 setloading_after_edit((prev) => !prev);
+                let toast = require("../toast_bar")
+                toast.msg("Saved", "green", 2000)
             }, (error) => {
                 //something wrong
                 setloading(false)
+                let toast = require("../toast_bar")
+                toast.msg("Sorry, something wrong", "red", 3000)
             });
         e.preventDefault();
     }
@@ -210,38 +217,44 @@ export default function Report() {
                         <tbody>
                             <tr>
                                 <td>
-                                    <Select
-                                        label="Month"
-                                        variant="filled"
-                                        value={monthTmp}
-                                        onChange={(e) => { setMonthTmp(e.target.value) }}
-                                    >
-                                        <MenuItem value="January">January</MenuItem>
-                                        <MenuItem value="February">February</MenuItem>
-                                        <MenuItem value="March">March</MenuItem>
-                                        <MenuItem value="April">April</MenuItem>
-                                        <MenuItem value="May">May</MenuItem>
-                                        <MenuItem value="June">June</MenuItem>
-                                        <MenuItem value="July">July</MenuItem>
-                                        <MenuItem value="August">August</MenuItem>
-                                        <MenuItem value="September">September</MenuItem>
-                                        <MenuItem value="October">October</MenuItem>
-                                        <MenuItem value="November">November</MenuItem>
-                                        <MenuItem value="December" >December</MenuItem>
-                                    </Select>
+                                    <FormControl variant='filled'>
+                                        <InputLabel id="month">Month</InputLabel>
+                                        <Select
+                                            label="Month"
+                                            variant="filled"
+                                            value={monthTmp}
+                                            onChange={(e) => { setMonthTmp(e.target.value) }}
+                                        >
+                                            <MenuItem value="January">January</MenuItem>
+                                            <MenuItem value="February">February</MenuItem>
+                                            <MenuItem value="March">March</MenuItem>
+                                            <MenuItem value="April">April</MenuItem>
+                                            <MenuItem value="May">May</MenuItem>
+                                            <MenuItem value="June">June</MenuItem>
+                                            <MenuItem value="July">July</MenuItem>
+                                            <MenuItem value="August">August</MenuItem>
+                                            <MenuItem value="September">September</MenuItem>
+                                            <MenuItem value="October">October</MenuItem>
+                                            <MenuItem value="November">November</MenuItem>
+                                            <MenuItem value="December" >December</MenuItem>
+                                        </Select>
+                                    </FormControl>
                                 </td>
                                 <td>
-                                    <Select
-                                        value={yearTmp}
-                                        label="Year"
-                                        variant="filled"
-                                        onChange={(e) => { setYearTmp(e.target.value) }}
-                                    >
-                                        <MenuItem value="2022">2022</MenuItem>
-                                        <MenuItem value="2023">2023</MenuItem>
-                                        <MenuItem value="2024">2024</MenuItem>
-                                        <MenuItem value="2025">2025</MenuItem>
-                                    </Select>
+                                    <FormControl variant='filled'>
+                                        <InputLabel id="day">Year</InputLabel>
+                                        <Select
+                                            value={yearTmp}
+                                            label="Year"
+                                            variant="filled"
+                                            onChange={(e) => { setYearTmp(e.target.value) }}
+                                        >
+                                            <MenuItem value="2022">2022</MenuItem>
+                                            <MenuItem value="2023">2023</MenuItem>
+                                            <MenuItem value="2024">2024</MenuItem>
+                                            <MenuItem value="2025">2025</MenuItem>
+                                        </Select>
+                                    </FormControl>
                                 </td>
                                 <td>
                                     <Button type="submit" variant="contained" style={{ padding: "15px 0px" }}>VIEW</Button>
@@ -251,11 +264,6 @@ export default function Report() {
                     </table>
                 </center>
             </form>
-
-            <button onClick={() => navigate("/admin/report")}>Attendance Report</button>
-            <button onClick={() => navigate("/admin/all_employee")}>All Employee</button>
-            <button onClick={() => navigate("/admin/showroom_location")}>Change Showroom Location</button>
-            <button onClick={() => { localStorage.setItem("admin_logged_in", "false"); navigate("/admin") }}>Logout</button>
 
             {loading ?
                 <div className='container col-4'>
@@ -347,26 +355,30 @@ export default function Report() {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style} className='col-4'>
-                    <button style={{ float: "right", background: "transparent", border: "0px", fontSize: "large", marginTop: "-10px" }} onClick={handleClose}><i className="fa fa-close"></i></button>
+                    <button style={{ float: "right", background: "transparent", border: "0px", fontSize: "large" }} onClick={handleClose}><i className="fa fa-close"></i></button>
+                    <h3>Edit Attendance</h3><hr />
                     SEC Name: <b>{stateValue.empName}</b><br />
                     EmployeeID: <b>{stateValue.empID}</b><br />
                     Date: <b>{stateValue.day + " " + stateValue.month + ", " + stateValue.year}</b>
-                    <br />Status:
+                    <br />
                     <form onSubmit={changeIndividual}>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={(stateValue.status != "-" && stateValue.status != "Sick Leave" && stateValue.status != "Day Off") ? "Present" : stateValue.status}
-                            label="Status"
-                            onChange={(e) => {
-                                setStateValue({ ...stateValue, status: e.target.value })
-                            }}
-                        >
-                            <MenuItem value="-">-</MenuItem>
-                            <MenuItem value="Present">Present</MenuItem>
-                            <MenuItem value="Sick Leave">Sick Leave</MenuItem>
-                            <MenuItem value="Day Off">Day Off</MenuItem>
-                        </Select>
+                        <FormControl variant='filled'>
+                            <InputLabel id="dayOff_label">Status</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={(stateValue.status != "-" && stateValue.status != "Sick Leave" && stateValue.status != "Day Off") ? "Present" : stateValue.status}
+                                label="Status"
+                                onChange={(e) => {
+                                    setStateValue({ ...stateValue, status: e.target.value })
+                                }}
+                            >
+                                <MenuItem value="-">-</MenuItem>
+                                <MenuItem value="Present">Present</MenuItem>
+                                <MenuItem value="Sick Leave">Sick Leave</MenuItem>
+                                <MenuItem value="Day Off">Day Off</MenuItem>
+                            </Select>
+                        </FormControl>
                         {(stateValue.status == "Present" || (stateValue.status != "-" && stateValue.status != "Sick Leave" && stateValue.status != "Day Off")) ?
                             <TextField onChange={(e) => {
                                 let t = e.target.value;

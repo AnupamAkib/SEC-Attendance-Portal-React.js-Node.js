@@ -9,6 +9,7 @@ import Report from './components/admin/Report';
 import All_Employee from './components/admin/All_Employee';
 import ChangeLocation from './components/admin/ChangeLocation';
 import AdminLogin from './components/admin/Login';
+import ChangePassword from './components/ChangePassword';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Login />} />
         <Route path='/attendance' element={<ConfirmProvider><Dashboard /></ConfirmProvider>} />
+        <Route path='/change_password' element={<ChangePassword />} />
         <Route path='/admin/report' element={<Report />} />
         <Route path='/admin' element={<AdminLogin />} />
         <Route path='/admin/showroom_location' element={<ChangeLocation />} />

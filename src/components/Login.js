@@ -30,14 +30,18 @@ export default function Login() {
                 if (res.result == "done") {
                     localStorage.setItem("empID", empID);
                     localStorage.setItem("password", password);
+                    let toast = require("./toast_bar")
+                    toast.msg("Login Successful", "green", 3000)
                     navigate("/attendance");
                 }
                 else {
-                    alert("incorrect login")
+                    let toast = require("./toast_bar")
+                    toast.msg("Incorrect Login Information", "red", 3000)
                 }
                 setloading(false)
             }, (error) => {
-                console.log(error);
+                let toast = require("./toast_bar")
+                toast.msg("Sorry, something wrong", "red", 3000)
             });
 
 

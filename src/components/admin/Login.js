@@ -37,10 +37,13 @@ export default function Login() {
         e.preventDefault();
         if (username == loginData.admin_username && password == loginData.admin_password) {
             localStorage.setItem("admin_logged_in", "true")
+            let toast = require("../toast_bar")
+            toast.msg("Successfully logged in", "green", 3000)
             navigate("/admin/report")
         }
         else {
-            alert("incorrect login")
+            let toast = require("../toast_bar")
+            toast.msg("Incorrect Login Information", "red", 3000)
         }
     }
     return (

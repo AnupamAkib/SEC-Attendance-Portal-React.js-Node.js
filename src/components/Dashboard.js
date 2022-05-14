@@ -9,6 +9,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 export default function Dashboard() {
     const navigate = useNavigate();
+    let toast = require('./toast_bar.js')
     let empID = localStorage.getItem("empID");
     let password = localStorage.getItem("password");
     useEffect(() => {
@@ -54,7 +55,8 @@ export default function Dashboard() {
                 //console.log(response.data[0])
                 setloading_location(false)
             }, (error) => {
-                console.log(error);
+                let toast = require("./toast_bar")
+                toast.msg("can't fetch showroom location", "red", 3000)
             });
     }, [])
 
@@ -119,7 +121,10 @@ export default function Dashboard() {
                 }
                 else {
                     //something wrong
-                    localStorage.clear();
+                    localStorage.removeItem("empID");
+                    localStorage.removeItem("password");
+                    let toast = require("./toast_bar")
+                    toast.msg("Please login again", "red", 3000)
                     navigate("/")
                 }
                 setLoading_info(false)
@@ -173,10 +178,13 @@ export default function Dashboard() {
                             setAlreadyAttendanceGiven(true);
                             setAttendanceStatus(status == "Present" ? time : status)
                             setLoading_attendance(false)
+                            let toast = require("./toast_bar")
+                            toast.msg("Attendance Submitted Successfully", "green", 3000)
                         }
 
                     }, (error) => {
-                        console.log(error);
+                        let toast = require("./toast_bar")
+                        toast.msg("Sorry, something wrong. Try Again", "red", 3000)
                     });
             })
             .catch(() => { /* ... */ });
@@ -184,19 +192,23 @@ export default function Dashboard() {
     }
 
     const logoutMe = () => {
-        localStorage.clear();
+        localStorage.removeItem("empID");
+        localStorage.removeItem("password");
+        toast.msg("You have been logged out", "green", 3000)
         navigate("/")
     }
 
     let distance = Math.sqrt((showroomLocation.latitude - geoLocation[0]) * (showroomLocation.latitude - geoLocation[0]) + (showroomLocation.longitude - geoLocation[1]) * (showroomLocation.longitude - geoLocation[1]));
     return (
         <div className='container col-6'>
+            <h2 align='center'>
+                My Attendance
+            </h2>
 
-            <img src='done.png' width='0px' />
             <div align='center' className='timedate'>
                 <b>{getDay() + " " + getMonth() + ", " + getYear()}</b><br />
-                {getTime("with sec")}<br /><br />
-            </div>
+                {getTime("with sec")}
+            </div><br />
 
             {loading_attendance || loading_info ?
                 <div>
@@ -273,8 +285,7 @@ export default function Dashboard() {
                 </>
             }
 
-            <br />
-
+            <img src='done.png' width='0px' />
 
         </div >
     )

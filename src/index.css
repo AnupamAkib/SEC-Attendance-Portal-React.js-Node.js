@@ -26,6 +26,9 @@ body {
 
 .timedate {
   font-size: 23px;
+  background-color: whitesmoke;
+  padding: 15px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
 }
 
 .header {
@@ -53,7 +56,7 @@ body {
   width: 70px;
   font-size: 30px;
   border-radius: 100%;
-  background-color: #2428ff;
+  background-color: #1976d2;
   border: 0px;
   color: white;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);

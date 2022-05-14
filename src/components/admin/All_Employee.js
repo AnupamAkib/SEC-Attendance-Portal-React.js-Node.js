@@ -35,7 +35,7 @@ export default function All_Employee() {
     const [removebtnloading, setRemovebtnloading] = useState(false)
 
     useEffect(() => {
-        if (localStorage.getItem("admin_logged_in") == "false") {
+        if (localStorage.getItem("admin_logged_in") != "true") {
             navigate("/admin")
         }
     }, [])
@@ -54,9 +54,13 @@ export default function All_Employee() {
                         let ar = response.data;
                         if (ar.result == "done") {
                             setloading_after_edit((prev) => !prev);
+                            let toast = require("../toast_bar")
+                            toast.msg("SEC Removed", "green", 3000)
                         }
                         else {
                             //something wrong
+                            let toast = require("../toast_bar")
+                            toast.msg("something wrong", "red", 3000)
                         }
                         setRemovebtnloading(false)
                         handleClose()
@@ -96,6 +100,8 @@ export default function All_Employee() {
                 setloading(false)
             }, (error) => {
                 console.log(error);
+                let toast = require("../toast_bar")
+                toast.msg("something wrong", "red", 3000)
             });
     }, [loading_after_edit])
 
@@ -110,8 +116,12 @@ export default function All_Employee() {
                 setloading_after_edit((prev) => !prev);
                 setRemovebtnloading(false);
                 handleClose();
+                let toast = require("../toast_bar")
+                toast.msg("Edit Successful", "green", 3000)
             }, (error) => {
                 console.log(error);
+                let toast = require("../toast_bar")
+                toast.msg("Something wrong", "red", 3000)
             });
         e.preventDefault();
     }
@@ -138,9 +148,12 @@ export default function All_Employee() {
                 //console.log(response.data)
                 if (response.data.result == "done") {
                     //success
+                    let toast = require("../toast_bar")
+                    toast.msg("SEC Added Successfully", "green", 3000)
                 }
                 else {
-                    alert("empID already exist")
+                    let toast = require("../toast_bar")
+                    toast.msg("EmployeeID already added", "red", 3000)
                 }
                 setloading_after_edit((prev) => !prev);
                 setbtn_loading(false);
@@ -177,9 +190,9 @@ export default function All_Employee() {
 
     return (
         <div className='container col-9'>
-            <h1 align='center'>
+            <h2 align='center'>
                 All SEC
-            </h1>
+            </h2>
             {loading ?
                 <div className="col-5 container">
                     <br /><br /><br />
