@@ -13,6 +13,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
 import { Navigate, useNavigate } from "react-router-dom";
 import FormControl from '@mui/material/FormControl';
+import Title from "../Title"
 
 const style = {
     position: 'absolute',
@@ -75,6 +76,10 @@ export default function Report() {
         if (localStorage.getItem("admin_logged_in") != "true") {
             navigate("/admin")
         }
+    }, [])
+
+    useEffect(() => {
+        window.scrollTo(0, 0)
     }, [])
 
     useEffect(() => {
@@ -209,200 +214,201 @@ export default function Report() {
     }
 
     return (
-        <div className='container'>
-            <h2 align='center'>SEC Attendance Report</h2>
-            <form onSubmit={monthYearChange}>
-                <center>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <FormControl variant='filled'>
-                                        <InputLabel id="month">Month</InputLabel>
-                                        <Select
-                                            label="Month"
-                                            variant="filled"
-                                            value={monthTmp}
-                                            onChange={(e) => { setMonthTmp(e.target.value) }}
-                                        >
-                                            <MenuItem value="January">January</MenuItem>
-                                            <MenuItem value="February">February</MenuItem>
-                                            <MenuItem value="March">March</MenuItem>
-                                            <MenuItem value="April">April</MenuItem>
-                                            <MenuItem value="May">May</MenuItem>
-                                            <MenuItem value="June">June</MenuItem>
-                                            <MenuItem value="July">July</MenuItem>
-                                            <MenuItem value="August">August</MenuItem>
-                                            <MenuItem value="September">September</MenuItem>
-                                            <MenuItem value="October">October</MenuItem>
-                                            <MenuItem value="November">November</MenuItem>
-                                            <MenuItem value="December" >December</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </td>
-                                <td>
-                                    <FormControl variant='filled'>
-                                        <InputLabel id="day">Year</InputLabel>
-                                        <Select
-                                            value={yearTmp}
-                                            label="Year"
-                                            variant="filled"
-                                            onChange={(e) => { setYearTmp(e.target.value) }}
-                                        >
-                                            <MenuItem value="2022">2022</MenuItem>
-                                            <MenuItem value="2023">2023</MenuItem>
-                                            <MenuItem value="2024">2024</MenuItem>
-                                            <MenuItem value="2025">2025</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </td>
-                                <td>
-                                    <Button type="submit" variant="contained" style={{ padding: "15px 0px" }}>VIEW</Button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </center>
-            </form>
+        <>
+            <Title text="SEC Attendance Report" />
+            <div className='container'>
+                <form onSubmit={monthYearChange}>
+                    <center>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <FormControl variant='filled'>
+                                            <InputLabel id="month">Month</InputLabel>
+                                            <Select
+                                                label="Month"
+                                                variant="filled"
+                                                value={monthTmp}
+                                                onChange={(e) => { setMonthTmp(e.target.value) }}
+                                            >
+                                                <MenuItem value="January">January</MenuItem>
+                                                <MenuItem value="February">February</MenuItem>
+                                                <MenuItem value="March">March</MenuItem>
+                                                <MenuItem value="April">April</MenuItem>
+                                                <MenuItem value="May">May</MenuItem>
+                                                <MenuItem value="June">June</MenuItem>
+                                                <MenuItem value="July">July</MenuItem>
+                                                <MenuItem value="August">August</MenuItem>
+                                                <MenuItem value="September">September</MenuItem>
+                                                <MenuItem value="October">October</MenuItem>
+                                                <MenuItem value="November">November</MenuItem>
+                                                <MenuItem value="December" >December</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </td>
+                                    <td>
+                                        <FormControl variant='filled'>
+                                            <InputLabel id="day">Year</InputLabel>
+                                            <Select
+                                                value={yearTmp}
+                                                label="Year"
+                                                variant="filled"
+                                                onChange={(e) => { setYearTmp(e.target.value) }}
+                                            >
+                                                <MenuItem value="2022">2022</MenuItem>
+                                                <MenuItem value="2023">2023</MenuItem>
+                                                <MenuItem value="2024">2024</MenuItem>
+                                                <MenuItem value="2025">2025</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </td>
+                                    <td>
+                                        <Button type="submit" variant="contained" style={{ padding: "15px 0px" }}>VIEW</Button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </center>
+                </form>
 
-            {loading ?
-                <div className='container col-4'>
-                    <br /><br /><br />
-                    <font size="5">Please Wait</font>
-                    <LinearProgress />
-                </div>
-                :
-                <div className="table-responsive">
-                    {notFound ?
-                        <>
-                            <br />
-                            <div style={{ background: "#f0f0f0", margin: "30px", padding: "30px" }}>
-                                <h2 align='center'>No Record Found!</h2>
-                            </div>
-                        </>
-                        :
-                        <>
-                            <br />
-                            <center>
-                                <ReactHTMLTableToExcel
-                                    id="test-table-xls-button"
-                                    className="download-table-xls-button btn btn-primary"
-                                    table="table-to-xls"
-                                    filename={"SEC_Attendance_Report_" + month + year}
-                                    sheet="tablexls"
-                                    buttonText={<><i className="fa fa-download" style={{ marginRight: "5px" }}></i> Download Report as XLS</>}
-                                />
-                            </center>
+                {loading ?
+                    <div className='container col-4'>
+                        <br /><br /><br />
+                        <font size="5">Please Wait</font>
+                        <LinearProgress />
+                    </div>
+                    :
+                    <div className="table-responsive">
+                        {notFound ?
+                            <>
+                                <br />
+                                <div style={{ background: "#f0f0f0", margin: "30px", padding: "30px" }}>
+                                    <h2 align='center'>No Record Found!</h2>
+                                </div>
+                            </>
+                            :
+                            <>
+                                <br />
+                                <center>
+                                    <ReactHTMLTableToExcel
+                                        id="test-table-xls-button"
+                                        className="download-table-xls-button btn btn-primary"
+                                        table="table-to-xls"
+                                        filename={"SEC_Attendance_Report_" + month + year}
+                                        sheet="tablexls"
+                                        buttonText={<><i className="fa fa-download" style={{ marginRight: "5px" }}></i> Download Report as XLS</>}
+                                    />
+                                </center>
 
 
-                            <table className='table table-striped table-bordered' width="100%" border="1" id="table-to-xls">
-                                <thead>
-                                    <tr><td colSpan={daysInMonth(month, year) + 1}><br />
-                                        <font size='4'><b>Pragati Sarani SEC Attendance ({month}, {year})</b></font>
-                                        <br /><br /></td></tr>
-                                    {report_header}
-                                </thead>
-                                <tbody>
-                                    {report}
-                                    <tr><td colSpan={daysInMonth(month, year) + 1}><br />
-                                        <font size='4'><b>Day Off / Casual Leave / Sick Leave </b></font>
-                                        <br /><br /></td></tr>
-                                    <tr align='center'>
-                                        <th colSpan={2}>SEC Name</th>
-                                        <th colSpan={2}>Casual/Sick Leave</th>
-                                        <th colSpan={2}>Day Off</th>
-                                        <th colSpan={2}>Working Days</th>
-                                    </tr>
-                                    {details.map((d) =>
+                                <table className='table table-striped table-bordered' width="100%" border="1" id="table-to-xls">
+                                    <thead>
+                                        <tr><td colSpan={daysInMonth(month, year) + 1}><br />
+                                            <font size='4'><b>Pragati Sarani SEC Attendance ({month}, {year})</b></font>
+                                            <br /><br /></td></tr>
+                                        {report_header}
+                                    </thead>
+                                    <tbody>
+                                        {report}
+                                        <tr><td colSpan={daysInMonth(month, year) + 1}><br />
+                                            <font size='4'><b>Day Off / Casual Leave / Sick Leave </b></font>
+                                            <br /><br /></td></tr>
                                         <tr align='center'>
-                                            <td colSpan={2}>{d.empName}</td>
-                                            {
-                                                d.sickLeave.length ?
-                                                    <td colSpan={2}>{d.sickLeave.length}{d.sickLeave.length > 1 ? " Days (" : " Day ("}<b>{printArray(d.sickLeave)}</b>{")"}</td>
-                                                    :
-                                                    <td colSpan={2}>-</td>
-                                            }
-                                            {
-                                                d.dayOff.length ?
-                                                    <td colSpan={2}>{d.dayOff.length}{d.dayOff.length > 1 ? " Days (" : " Day ("}<b>{printArray(d.dayOff)}</b>{")"}</td>
-                                                    :
-                                                    <td colSpan={2}>-</td>
-                                            }
-                                            <td colSpan={2}>{d.workingDay}</td>
-
+                                            <th colSpan={2}>SEC Name</th>
+                                            <th colSpan={2}>Casual/Sick Leave</th>
+                                            <th colSpan={2}>Day Off</th>
+                                            <th colSpan={2}>Working Days</th>
                                         </tr>
-                                    )}
-                                    <tr>
-                                        <td colSpan={daysInMonth(month, year) + 1} align='center'>
-                                            Generated by <b>SEC Portal App</b><br />
-                                            Date: {d.getDate() + " " + month_name[d.getMonth()] + ", " + d.getFullYear()}<br />
-                                            Made by <a href="http://facebook.com/anupam.akib">Mir Anupam Hossain Akib</a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table></>
-                    }
+                                        {details.map((d) =>
+                                            <tr align='center'>
+                                                <td colSpan={2}>{d.empName}</td>
+                                                {
+                                                    d.sickLeave.length ?
+                                                        <td colSpan={2}>{d.sickLeave.length}{d.sickLeave.length > 1 ? " Days (" : " Day ("}<b>{printArray(d.sickLeave)}</b>{")"}</td>
+                                                        :
+                                                        <td colSpan={2}>-</td>
+                                                }
+                                                {
+                                                    d.dayOff.length ?
+                                                        <td colSpan={2}>{d.dayOff.length}{d.dayOff.length > 1 ? " Days (" : " Day ("}<b>{printArray(d.dayOff)}</b>{")"}</td>
+                                                        :
+                                                        <td colSpan={2}>-</td>
+                                                }
+                                                <td colSpan={2}>{d.workingDay}</td>
+
+                                            </tr>
+                                        )}
+                                        <tr>
+                                            <td colSpan={daysInMonth(month, year) + 1} align='center'>
+                                                Generated by <b>SEC Portal App</b><br />
+                                                Date: {d.getDate() + " " + month_name[d.getMonth()] + ", " + d.getFullYear()}<br />
+                                                Developed by <a href="http://facebook.com/anupam.akib">Mir Anupam Hossain Akib</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table></>
+                        }
+                    </div>
+                }
+                <div>
                 </div>
-            }
-            <div>
-            </div>
 
 
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Box sx={style} className='col-4'>
-                    <button style={{ float: "right", background: "transparent", border: "0px", fontSize: "large" }} onClick={handleClose}><i className="fa fa-close"></i></button>
-                    <h3>Edit Attendance</h3><hr />
-                    SEC Name: <b>{stateValue.empName}</b><br />
-                    EmployeeID: <b>{stateValue.empID}</b><br />
-                    Date: <b>{stateValue.day + " " + stateValue.month + ", " + stateValue.year}</b>
-                    <br />
-                    <form onSubmit={changeIndividual}>
-                        <FormControl variant='filled'>
-                            <InputLabel id="dayOff_label">Status</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={(stateValue.status != "-" && stateValue.status != "Sick Leave" && stateValue.status != "Day Off") ? "Present" : stateValue.status}
-                                label="Status"
-                                onChange={(e) => {
-                                    setStateValue({ ...stateValue, status: e.target.value })
-                                }}
-                            >
-                                <MenuItem value="-">-</MenuItem>
-                                <MenuItem value="Present">Present</MenuItem>
-                                <MenuItem value="Sick Leave">Sick Leave</MenuItem>
-                                <MenuItem value="Day Off">Day Off</MenuItem>
-                            </Select>
-                        </FormControl>
-                        {(stateValue.status == "Present" || (stateValue.status != "-" && stateValue.status != "Sick Leave" && stateValue.status != "Day Off")) ?
-                            <TextField onChange={(e) => {
-                                let t = e.target.value;
-                                let mh = t.split(":");
-                                let hours = mh[0];
-                                let minutes = mh[1];
-                                let ampm = hours >= 12 ? 'PM' : 'AM';
-                                hours = hours % 12;
-                                hours = hours ? hours : 12; // the hour '0' should be '12'
-                                if (hours < 10) hours = "0" + hours;
-                                var strTime = "";
-                                strTime = hours + ':' + minutes + ' ' + ampm;
-                                setTakeTime(e.target.value)
-                                setStateValue({ ...stateValue, status: strTime })
-                            }} value={takeTime} placeholder="10:35 AM" type="time" label="Time" variant="filled" required /> : ""}
+                <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={style} className='col-4'>
+                        <button style={{ float: "right", background: "transparent", border: "0px", fontSize: "large" }} onClick={handleClose}><i className="fa fa-close"></i></button>
+                        <h3>Edit Attendance</h3><hr />
+                        SEC Name: <b>{stateValue.empName}</b><br />
+                        EmployeeID: <b>{stateValue.empID}</b><br />
+                        Date: <b>{stateValue.day + " " + stateValue.month + ", " + stateValue.year}</b>
+                        <br />
+                        <form onSubmit={changeIndividual}>
+                            <FormControl variant='filled'>
+                                <InputLabel id="dayOff_label">Status</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={(stateValue.status != "-" && stateValue.status != "Sick Leave" && stateValue.status != "Day Off") ? "Present" : stateValue.status}
+                                    label="Status"
+                                    onChange={(e) => {
+                                        setStateValue({ ...stateValue, status: e.target.value })
+                                    }}
+                                >
+                                    <MenuItem value="-">-</MenuItem>
+                                    <MenuItem value="Present">Present</MenuItem>
+                                    <MenuItem value="Sick Leave">Sick Leave</MenuItem>
+                                    <MenuItem value="Day Off">Day Off</MenuItem>
+                                </Select>
+                            </FormControl>
+                            {(stateValue.status == "Present" || (stateValue.status != "-" && stateValue.status != "Sick Leave" && stateValue.status != "Day Off")) ?
+                                <TextField onChange={(e) => {
+                                    let t = e.target.value;
+                                    let mh = t.split(":");
+                                    let hours = mh[0];
+                                    let minutes = mh[1];
+                                    let ampm = hours >= 12 ? 'PM' : 'AM';
+                                    hours = hours % 12;
+                                    hours = hours ? hours : 12; // the hour '0' should be '12'
+                                    if (hours < 10) hours = "0" + hours;
+                                    var strTime = "";
+                                    strTime = hours + ':' + minutes + ' ' + ampm;
+                                    setTakeTime(e.target.value)
+                                    setStateValue({ ...stateValue, status: strTime })
+                                }} value={takeTime} placeholder="10:35 AM" type="time" label="Time" variant="filled" required /> : ""}
 
-                        <br /><br />
-                        <center>
-                            <Button type='submit' variant="contained" style={{ width: "120px", marginRight: "5px" }} disabled={individualChangeLoading}>{individualChangeLoading ? "Loading" : "SAVE"}</Button>
-                            <Button variant="outlined" onClick={handleClose} style={{ width: "120px" }}>Cancel</Button>
-                        </center>
-                    </form>
-                </Box>
-            </Modal>
-        </div>
+                            <br /><br />
+                            <center>
+                                <Button type='submit' variant="contained" style={{ width: "120px", marginRight: "5px" }} disabled={individualChangeLoading}>{individualChangeLoading ? "Loading" : "SAVE"}</Button>
+                                <Button variant="outlined" onClick={handleClose} style={{ width: "120px" }}>Cancel</Button>
+                            </center>
+                        </form>
+                    </Box>
+                </Modal>
+            </div></>
     )
 }

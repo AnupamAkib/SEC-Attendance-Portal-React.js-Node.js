@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import { Navigate, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from 'react'
 import axios from 'axios'
+import Title from '../Title';
 
 export default function ChangeLocation() {
     const navigate = useNavigate();
@@ -19,6 +20,10 @@ export default function ChangeLocation() {
         if (localStorage.getItem("admin_logged_in") != "true") {
             navigate("/admin")
         }
+    }, [])
+
+    useEffect(() => {
+        window.scrollTo(0, 0)
     }, [])
 
     useEffect(() => {
@@ -68,15 +73,17 @@ export default function ChangeLocation() {
     }
 
     return (
-        <div className='container col-4'>
-            <h2 align='center'>Showroom Location</h2>
-            <form onSubmit={changeShowRoomLocation}>
-                <TextField fullWidth variant="filled" label="Latitude" value={latitude} onChange={(e) => setLatitude(e.target.value)} required /><br />
-                <TextField fullWidth variant="filled" label="Longitude" value={longitude} onChange={(e) => setLongitude(e.target.value)} required /><br />
-                <TextField fullWidth variant="filled" label="Range (Meter)" value={range} onChange={(e) => setRange(e.target.value)} required /><br />
-                <Button size="large" fullWidth onClick={locateMe}>Locate my position</Button><br />
-                <Button size="large" fullWidth variant="contained" type='submit' disabled={loading}>{loading ? "please wait" : "SAVE Changes"}</Button>
-            </form>
-        </div>
+        <>
+            <Title text="Showroom Location" />
+            <div className='container col-4'>
+                <div className='login_box'>
+                    <form onSubmit={changeShowRoomLocation}>
+                        <TextField fullWidth variant="filled" label="Latitude" value={latitude} onChange={(e) => setLatitude(e.target.value)} required /><br />
+                        <TextField fullWidth variant="filled" label="Longitude" value={longitude} onChange={(e) => setLongitude(e.target.value)} required /><br />
+                        <TextField fullWidth variant="filled" label="Range (Meter)" value={range} onChange={(e) => setRange(e.target.value)} required /><br />
+                        <Button size="large" fullWidth onClick={locateMe}>Locate my position</Button><br />
+                        <Button size="large" fullWidth variant="contained" type='submit' disabled={loading}>{loading ? "please wait" : "SAVE Changes"}</Button>
+                    </form>
+                </div></div></>
     )
 }

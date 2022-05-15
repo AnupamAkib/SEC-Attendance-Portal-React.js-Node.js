@@ -48,7 +48,7 @@ const ResponsiveAppBar = () => {
 
     return (
         <>
-            <AppBar position="static">
+            <AppBar position="static" sx={{ position: "fixed", zIndex: "100" }}>
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
                         <Typography
@@ -97,6 +97,7 @@ const ResponsiveAppBar = () => {
                                                 display: { xs: 'block', md: 'none' },
                                             }}
                                         >
+                                            <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/") }}>Home</MenuItem>
                                             <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/admin/report") }}>Report</MenuItem>
                                             <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/admin/all_employee") }}>All SEC</MenuItem>
                                             <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/admin/showroom_location") }}>Showroom Location</MenuItem>
@@ -121,6 +122,7 @@ const ResponsiveAppBar = () => {
                                                 display: { xs: 'block', md: 'none' },
                                             }}
                                         >
+                                            <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/") }}>Home</MenuItem>
                                             <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/admin") }}>Login</MenuItem>
                                         </Menu>
 
@@ -144,6 +146,7 @@ const ResponsiveAppBar = () => {
                                                 display: { xs: 'block', md: 'none' },
                                             }}
                                         >
+                                            <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/") }}>Home</MenuItem>
                                             <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/attendance") }}>My Attendance</MenuItem>
                                             <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/change_password") }}>Change Password</MenuItem>
                                             <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/admin") }}>Admin Panel</MenuItem>
@@ -167,6 +170,7 @@ const ResponsiveAppBar = () => {
                                                 display: { xs: 'block', md: 'none' },
                                             }}
                                         >
+                                            <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/") }}>Home</MenuItem>
                                             <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/") }}>Login</MenuItem>
                                             <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/admin") }}>Admin Panel</MenuItem>
                                         </Menu>
@@ -190,34 +194,38 @@ const ResponsiveAppBar = () => {
                             curPath == "admin" ?
                                 localStorage.getItem("admin_logged_in") == "true" ?
                                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                                        <Button onClick={() => navigate("/admin/report")} sx={{ my: 2, color: 'white', display: 'block', mr: 3 }}>Report</Button>
-                                        <Button onClick={() => navigate("/admin/all_employee")} sx={{ my: 2, color: 'white', display: 'block', mr: 3 }}>All Sec</Button>
-                                        <Button onClick={() => navigate("/admin/showroom_location")} sx={{ my: 2, color: 'white', display: 'block', mr: 3 }}>Showroom location</Button>
-                                        <Button onClick={() => { localStorage.setItem("admin_logged_in", "false"); navigate("/admin") }} sx={{ my: 2, color: 'white', display: 'block', mr: 3 }}>logout</Button>
+                                        <Button onClick={() => navigate("/")} sx={{ my: 1, color: 'white', display: 'block', mr: 3 }}>Home</Button>
+                                        <Button onClick={() => navigate("/admin/report")} sx={{ my: 1, color: 'white', display: 'block', mr: 3 }}>Report</Button>
+                                        <Button onClick={() => navigate("/admin/all_employee")} sx={{ my: 1, color: 'white', display: 'block', mr: 3 }}>All Sec</Button>
+                                        <Button onClick={() => navigate("/admin/showroom_location")} sx={{ my: 1, color: 'white', display: 'block', mr: 3 }}>Showroom location</Button>
+                                        <Button onClick={() => { localStorage.setItem("admin_logged_in", "false"); navigate("/admin") }} sx={{ my: 1, color: 'white', display: 'block', mr: 3 }}>logout</Button>
                                     </Box>
                                     :
                                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                                        <Button onClick={() => navigate("/admin")} sx={{ my: 2, color: 'white', display: 'block', mr: 3 }}>Login</Button>
+                                        <Button onClick={() => navigate("/")} sx={{ my: 1, color: 'white', display: 'block', mr: 3 }}>Home</Button>
+                                        <Button onClick={() => navigate("/admin")} sx={{ my: 1, color: 'white', display: 'block', mr: 3 }}>Login</Button>
                                     </Box>
 
                                 :
                                 localStorage.getItem("empID") != null ?
                                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                                        <Button onClick={() => navigate("/attendance")} sx={{ my: 2, color: 'white', display: 'block', mr: 3 }}>My Attendance</Button>
-                                        <Button onClick={() => navigate("/change_password")} sx={{ my: 2, color: 'white', display: 'block', mr: 3 }}>Change password</Button>
-                                        <Button onClick={() => navigate("/admin")} sx={{ my: 2, color: 'white', display: 'block', mr: 3 }}>Admin panel</Button>
+                                        <Button onClick={() => navigate("/")} sx={{ my: 1, color: 'white', display: 'block', mr: 3 }}>Home</Button>
+                                        <Button onClick={() => navigate("/attendance")} sx={{ my: 1, color: 'white', display: 'block', mr: 3 }}>My Attendance</Button>
+                                        <Button onClick={() => navigate("/change_password")} sx={{ my: 1, color: 'white', display: 'block', mr: 3 }}>Change password</Button>
+                                        <Button onClick={() => navigate("/admin")} sx={{ my: 1, color: 'white', display: 'block', mr: 3 }}>Admin panel</Button>
                                     </Box>
                                     :
                                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                                        <Button onClick={() => navigate("/")} sx={{ my: 2, color: 'white', display: 'block', mr: 3 }}>Login</Button>
-                                        <Button onClick={() => navigate("/admin")} sx={{ my: 2, color: 'white', display: 'block', mr: 3 }}>Admin panel</Button>
+                                        <Button onClick={() => navigate("/")} sx={{ my: 1, color: 'white', display: 'block', mr: 3 }}>Home</Button>
+                                        <Button onClick={() => navigate("/")} sx={{ my: 1, color: 'white', display: 'block', mr: 3 }}>Login</Button>
+                                        <Button onClick={() => navigate("/admin")} sx={{ my: 1, color: 'white', display: 'block', mr: 3 }}>Admin panel</Button>
                                     </Box>
                         }
 
                     </Toolbar>
                 </Container>
             </AppBar>
-            <br /></>
+            <br /><br /></>
     );
 };
 export default ResponsiveAppBar;

@@ -13,6 +13,7 @@ import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { useNavigate } from 'react-router-dom';
+import Title from '../Title';
 
 const style = {
     position: 'absolute',
@@ -38,6 +39,10 @@ export default function All_Employee() {
         if (localStorage.getItem("admin_logged_in") != "true") {
             navigate("/admin")
         }
+    }, [])
+
+    useEffect(() => {
+        window.scrollTo(0, 0)
     }, [])
 
     const confirm = useConfirm();
@@ -172,7 +177,7 @@ export default function All_Employee() {
             <tr>
                 <td>{allEmp[i].empName}</td>
                 <td>{allEmp[i].dayOff}</td>
-                <td>
+                <td><center>
                     <Button variant="contained" onClick={() => {
                         //console.log(allEmp[i].empName)
                         setEmpID(allEmp[i].empID);
@@ -181,7 +186,7 @@ export default function All_Employee() {
                         setEmpDayOff(allEmp[i].dayOff);
                         handleOpen();
                     }}>Edit
-                    </Button>
+                    </Button></center>
                 </td>
             </tr>
         )
@@ -189,119 +194,118 @@ export default function All_Employee() {
 
 
     return (
-        <div className='container col-9'>
-            <h2 align='center'>
-                All SEC
-            </h2>
-            {loading ?
-                <div className="col-5 container">
-                    <br /><br /><br />
-                    <font size="5">Please Wait</font>
-                    <LinearProgress />
+        <>
+            <Title text="All SEC" />
+            <div className='container col-9'>
+                {loading ?
+                    <div className="col-5 container">
+                        <br /><br /><br />
+                        <font size="5">Please Wait</font>
+                        <LinearProgress />
+                    </div>
+                    :
+                    <table className='table table-bordered table-striped'>
+                        <thead>
+                            <tr>
+                                <th>SEC Name</th>
+                                <th>Day Off</th>
+                                <th><center>Action</center></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {emp}
+                        </tbody>
+                    </table>
+                }
+
+
+                <div>
+                    <Modal
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box sx={style} className='col-4'>
+                            <button style={{ float: "right", background: "transparent", border: "0px", fontSize: "large" }} onClick={handleClose}><i className="fa fa-close"></i></button>
+                            <h3>Edit SEC info</h3><hr />
+                            <form onSubmit={editEmp}>
+                                <TextField fullWidth onChange={(e) => { setEmpName(e.target.value) }} value={empName} label="SEC Name" variant="filled" InputProps={{ readOnly: true }} required /><br />
+                                <TextField fullWidth onChange={(e) => { setEmpID(e.target.value) }} value={empID} label="EmployeeID" variant="filled" InputProps={{ readOnly: true }} required /><br />
+                                <TextField fullWidth onChange={(e) => { setEmpPass(e.target.value) }} value={empPass} label="Password" variant="filled" required /><br />
+
+
+                                <FormControl variant='filled' fullWidth>
+                                    <InputLabel id="dayOff_label">Day Off</InputLabel>
+                                    <Select
+                                        labelId='dayOff_label'
+                                        label="Day Off"
+                                        value={empDayOff}
+                                        onChange={(e) => { setEmpDayOff(e.target.value) }}
+                                    >
+                                        <MenuItem value='Saturday'>Saturday</MenuItem>
+                                        <MenuItem value='Sunday'>Sunday</MenuItem>
+                                        <MenuItem value='Monday'>Monday</MenuItem>
+                                        <MenuItem value='Tuesday'>Tuesday</MenuItem>
+                                        <MenuItem value='Wednesday'>Wednesday</MenuItem>
+                                        <MenuItem value='Thursday'>Thursday</MenuItem>
+                                        <MenuItem value='Friday'>Friday</MenuItem>
+                                    </Select>
+                                </FormControl>
+
+                                <br /><br />
+                                <center>
+                                    <Button type='submit' variant="contained" disabled={removebtnloading} style={{ marginRight: "5px", width: "128px" }}>{removebtnloading ? "Working..." : <font size="3"><i className="fa fa-save" style={{ marginRight: "5px" }}></i> SAVE</font>}</Button>
+                                    <Button variant="contained" color="error" onClick={() => {
+                                        handleClick(empName, empID)
+                                    }} disabled={removebtnloading} style={{ width: "128px" }}>{removebtnloading ? "Working..." : <font size="3"><i className="fa fa-trash-o" style={{ marginRight: "5px" }}></i> REMOVE</font>}</Button>
+                                </center>
+                            </form>
+                        </Box>
+                    </Modal>
+
+
+                    <Modal
+                        open={open_add}
+                        onClose={handleClose_add}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box sx={style} className='col-4'>
+                            <button style={{ float: "right", background: "transparent", border: "0px", fontSize: "large" }} onClick={handleClose_add}><i className="fa fa-close"></i></button>
+                            <h3>Add New SEC</h3><hr />
+                            <form onSubmit={addEmp}>
+                                <TextField fullWidth onChange={(e) => { setEmpName(e.target.value) }} value={empName} placeholder="SEC Name" label="SEC Name" variant="filled" required /><br />
+                                <TextField fullWidth onChange={(e) => { setEmpID(e.target.value) }} value={empID} placeholder="SEC EmployeeID" label="SEC EmployeeID" variant="filled" required /><br />
+                                <TextField fullWidth onChange={(e) => { setEmpPass(e.target.value) }} value={empPass} placeholder="Password" label="Password" variant="filled" required /><br />
+
+                                <FormControl variant='filled' fullWidth>
+                                    <InputLabel id="dayOff_label">Day Off</InputLabel>
+                                    <Select
+                                        labelId='dayOff_label'
+                                        label="Day Off"
+                                        value={empDayOff}
+                                        onChange={(e) => { setEmpDayOff(e.target.value) }}
+                                    >
+                                        <MenuItem value='Saturday'>Saturday</MenuItem>
+                                        <MenuItem value='Sunday'>Sunday</MenuItem>
+                                        <MenuItem value='Monday'>Monday</MenuItem>
+                                        <MenuItem value='Tuesday'>Tuesday</MenuItem>
+                                        <MenuItem value='Wednesday'>Wednesday</MenuItem>
+                                        <MenuItem value='Thursday'>Thursday</MenuItem>
+                                        <MenuItem value='Friday'>Friday</MenuItem>
+                                    </Select>
+                                </FormControl>
+                                <br /><br />
+                                <center>
+                                    <Button type='submit' variant="contained" disabled={btn_loading}>{btn_loading ? "Please Wait" : <font size='3'><i className="fa fa-plus-square" style={{ marginRight: "5px" }}></i>ADD {empName.split(" ")[empName.split(" ").length - 1]}</font>}</Button>
+                                </center>
+                            </form>
+                        </Box>
+                    </Modal>
                 </div>
-                :
-                <table className='table table-bordered'>
-                    <thead>
-                        <tr>
-                            <th>SEC Name</th>
-                            <th>Day Off</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {emp}
-                    </tbody>
-                </table>
-            }
 
-
-            <div>
-                <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
-                    <Box sx={style} className='col-4'>
-                        <button style={{ float: "right", background: "transparent", border: "0px", fontSize: "large" }} onClick={handleClose}><i className="fa fa-close"></i></button>
-                        <h3>Edit SEC info</h3><hr />
-                        <form onSubmit={editEmp}>
-                            <TextField fullWidth onChange={(e) => { setEmpName(e.target.value) }} value={empName} label="SEC Name" variant="filled" InputProps={{ readOnly: true }} required /><br />
-                            <TextField fullWidth onChange={(e) => { setEmpID(e.target.value) }} value={empID} label="EmployeeID" variant="filled" InputProps={{ readOnly: true }} required /><br />
-                            <TextField fullWidth onChange={(e) => { setEmpPass(e.target.value) }} value={empPass} label="Password" variant="filled" required /><br />
-
-
-                            <FormControl variant='filled' fullWidth>
-                                <InputLabel id="dayOff_label">Day Off</InputLabel>
-                                <Select
-                                    labelId='dayOff_label'
-                                    label="Day Off"
-                                    value={empDayOff}
-                                    onChange={(e) => { setEmpDayOff(e.target.value) }}
-                                >
-                                    <MenuItem value='Saturday'>Saturday</MenuItem>
-                                    <MenuItem value='Sunday'>Sunday</MenuItem>
-                                    <MenuItem value='Monday'>Monday</MenuItem>
-                                    <MenuItem value='Tuesday'>Tuesday</MenuItem>
-                                    <MenuItem value='Wednesday'>Wednesday</MenuItem>
-                                    <MenuItem value='Thursday'>Thursday</MenuItem>
-                                    <MenuItem value='Friday'>Friday</MenuItem>
-                                </Select>
-                            </FormControl>
-
-                            <br /><br />
-                            <center>
-                                <Button type='submit' variant="contained" disabled={removebtnloading} style={{ marginRight: "5px", width: "128px" }}>{removebtnloading ? "Working..." : <font size="3"><i className="fa fa-save" style={{ marginRight: "5px" }}></i> SAVE</font>}</Button>
-                                <Button variant="contained" color="error" onClick={() => {
-                                    handleClick(empName, empID)
-                                }} disabled={removebtnloading} style={{ width: "128px" }}>{removebtnloading ? "Working..." : <font size="3"><i className="fa fa-trash-o" style={{ marginRight: "5px" }}></i> REMOVE</font>}</Button>
-                            </center>
-                        </form>
-                    </Box>
-                </Modal>
-
-
-                <Modal
-                    open={open_add}
-                    onClose={handleClose_add}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
-                    <Box sx={style} className='col-4'>
-                        <button style={{ float: "right", background: "transparent", border: "0px", fontSize: "large" }} onClick={handleClose_add}><i className="fa fa-close"></i></button>
-                        <h3>Add New SEC</h3><hr />
-                        <form onSubmit={addEmp}>
-                            <TextField fullWidth onChange={(e) => { setEmpName(e.target.value) }} value={empName} placeholder="SEC Name" label="SEC Name" variant="filled" required /><br />
-                            <TextField fullWidth onChange={(e) => { setEmpID(e.target.value) }} value={empID} placeholder="SEC EmployeeID" label="SEC EmployeeID" variant="filled" required /><br />
-                            <TextField fullWidth onChange={(e) => { setEmpPass(e.target.value) }} value={empPass} placeholder="Password" label="Password" variant="filled" required /><br />
-
-                            <FormControl variant='filled' fullWidth>
-                                <InputLabel id="dayOff_label">Day Off</InputLabel>
-                                <Select
-                                    labelId='dayOff_label'
-                                    label="Day Off"
-                                    value={empDayOff}
-                                    onChange={(e) => { setEmpDayOff(e.target.value) }}
-                                >
-                                    <MenuItem value='Saturday'>Saturday</MenuItem>
-                                    <MenuItem value='Sunday'>Sunday</MenuItem>
-                                    <MenuItem value='Monday'>Monday</MenuItem>
-                                    <MenuItem value='Tuesday'>Tuesday</MenuItem>
-                                    <MenuItem value='Wednesday'>Wednesday</MenuItem>
-                                    <MenuItem value='Thursday'>Thursday</MenuItem>
-                                    <MenuItem value='Friday'>Friday</MenuItem>
-                                </Select>
-                            </FormControl>
-                            <br /><br />
-                            <center>
-                                <Button type='submit' variant="contained" disabled={btn_loading}>{btn_loading ? "Please Wait" : <font size='3'><i className="fa fa-plus-square" style={{ marginRight: "5px" }}></i>ADD {empName.split(" ")[empName.split(" ").length - 1]}</font>}</Button>
-                            </center>
-                        </form>
-                    </Box>
-                </Modal>
-            </div>
-
-            <button onClick={handleOpen_add} className="addSEC_btn"><i className="fa fa-plus"></i></button>
-        </div>
+                <button onClick={handleOpen_add} className="addSEC_btn"><i className="fa fa-plus"></i></button>
+            </div></>
     )
 }

@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import { Navigate, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from 'react'
 import axios from 'axios'
+import Title from '../Title';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -19,6 +20,10 @@ export default function Login() {
         if (localStorage.getItem("admin_logged_in") == "true") {
             navigate("/admin/report")
         }
+    }, [])
+
+    useEffect(() => {
+        window.scrollTo(0, 0)
     }, [])
 
     useEffect(() => {
@@ -47,13 +52,15 @@ export default function Login() {
         }
     }
     return (
-        <div className='container col-4'>
-            <h2 align='center'>Admin login</h2>
-            <form onSubmit={check_login}>
-                <TextField fullWidth label="Username" variant="filled" value={username} onChange={(e) => setusername(e.target.value)} type="text" required />
-                <TextField fullWidth label="Password" variant="filled" value={password} onChange={(e) => setpassword(e.target.value)} type="password" required />
-                <Button type="submit" variant="contained" fullWidth disabled={loading}>{loading ? "data fetching" : "LOGIN"}</Button>
-            </form>
-        </div>
+        <>
+            <Title text="Admin Login" />
+            <div className='container col-4'>
+                <form onSubmit={check_login} className="login_box">
+                    <center><font size="5">Login with Admin Username and Password</font></center><br />
+                    <TextField fullWidth label="Username" variant="filled" value={username} onChange={(e) => setusername(e.target.value)} type="text" required />
+                    <TextField fullWidth label="Password" variant="filled" value={password} onChange={(e) => setpassword(e.target.value)} type="password" required />
+                    <Button type="submit" variant="contained" fullWidth disabled={loading}>{loading ? "data fetching" : "LOGIN"}</Button>
+                </form>
+            </div></>
     )
 }

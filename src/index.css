@@ -17,11 +17,13 @@ body {
   outline: none;
   border: 0px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
 }
 
 .attendanceBtn:hover {
   background-color: #f0f0f0 !important;
   transition: 0.2s;
+  color: #000 !important;
 }
 
 .timedate {
@@ -61,4 +63,29 @@ body {
   color: white;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
   outline: none;
+}
+
+.title_text {
+  background-color: skyblue;
+  background-image: linear-gradient(to right, rgb(0, 3, 156), #1976d2);
+  font-size: 25px;
+  padding: 15px 0px 15px 0px;
+  font-weight: bold;
+  margin-top: -30px;
+  margin-bottom: 15px;
+  color: #fff;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.858);
+}
+
+.footer {
+  background-color: #212121;
+  color: #fff;
+  padding: 20px;
+}
+
+.links a {
+  font-size: 22px;
+  text-decoration: none;
+  color: white;
+  padding: 7px;
 }

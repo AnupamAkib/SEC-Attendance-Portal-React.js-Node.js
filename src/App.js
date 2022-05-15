@@ -10,6 +10,7 @@ import All_Employee from './components/admin/All_Employee';
 import ChangeLocation from './components/admin/ChangeLocation';
 import AdminLogin from './components/admin/Login';
 import ChangePassword from './components/ChangePassword';
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -24,7 +25,6 @@ function App() {
         <Route path='/admin/showroom_location' element={<ChangeLocation />} />
         <Route path='/admin/all_employee' element={<ConfirmProvider><All_Employee /></ConfirmProvider>} />
       </Routes>
-
     </BrowserRouter>
   );
 }

@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useNavigate } from "react-router-dom";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Title from './Title';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -16,16 +17,20 @@ export default function Login() {
         }
     }, [])
 
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [])
+
     const formSubmit = (e) => {
-        console.log(empID);
-        console.log(password);
+        //console.log(empID);
+        //console.log(password);
         setloading(true)
         axios.post('https://flash-shop-server.herokuapp.com/SEC/SEC_login', {
             //parameters
             empID, password
         })
             .then((response) => {
-                console.log(response.data)
+                //console.log(response.data)
                 let res = response.data;
                 if (res.result == "done") {
                     localStorage.setItem("empID", empID);
@@ -48,15 +53,16 @@ export default function Login() {
         e.preventDefault();
     }
     return (
-        <div className='container' align='center'>
-            <br />
-            <div className='col-5 login_box'>
-                <h2>SEC Login</h2><hr />
-                <form onSubmit={formSubmit}>
-                    <TextField fullWidth label="Enter Employee ID" variant="filled" onChange={(e) => { setEmpID(e.target.value) }} type='text' placeholder='' required /><br />
-                    <TextField fullWidth label="Enter Password" variant="filled" onChange={(e) => { setPassword(e.target.value) }} type='password' placeholder='' required /><br />
-                    <Button type='submit' variant='contained' size="large" fullWidth disabled={loading}>{loading ? "please wait" : <><i class="fa fa-sign-in" style={{ marginRight: "8px" }}></i>Login</>}</Button>
-                </form>
-            </div></div>
+        <>
+            <Title text="SEC Login" />
+            <div className='container' align='center'>
+                <div className='col-5 login_box'>
+                    <font size="5">Login with your EmployeeID and Password</font><br /><br />
+                    <form onSubmit={formSubmit}>
+                        <TextField fullWidth label="Enter Employee ID" variant="filled" onChange={(e) => { setEmpID(e.target.value) }} type='text' placeholder='' required /><br />
+                        <TextField fullWidth label="Enter Password" variant="filled" onChange={(e) => { setPassword(e.target.value) }} type='password' placeholder='' required /><br />
+                        <Button type='submit' variant='contained' size="large" fullWidth disabled={loading}>{loading ? "please wait" : <><i class="fa fa-sign-in" style={{ marginRight: "8px" }}></i>Login</>}</Button>
+                    </form>
+                </div></div></>
     )
 }
