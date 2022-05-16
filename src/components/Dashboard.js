@@ -45,12 +45,12 @@ export default function Dashboard() {
     const [showroomLocation, setShowroomLocation] = useState({
         latitude: "0",
         longitude: "0",
-        range: "0",
-        _id: "0"
+        range: "0"
     })
     const [loading_location, setloading_location] = useState(true)
+    const [showroom_name, setshowroom_name] = useState("")
 
-    useEffect(() => {
+    /*useEffect(() => {
         setloading_location(true)
         axios.post('https://flash-shop-server.herokuapp.com/SEC/showRoomLocation', {
             //parameters
@@ -63,7 +63,7 @@ export default function Dashboard() {
                 let toast = require("./toast_bar")
                 toast.msg(<font>Please <b>REFRESH</b> the page. Server was sleeping</font>, "red", 5000)
             });
-    }, [])
+    }, [])*/
 
     const [empName, setEmpName] = useState("")
     const [dayOff, setDayOff] = useState("")
@@ -113,6 +113,7 @@ export default function Dashboard() {
 
 
     useEffect(() => {
+        setloading_location(true)
         axios.post('https://flash-shop-server.herokuapp.com/SEC/SEC_login', {
             //parameters
             empID, password
@@ -123,6 +124,13 @@ export default function Dashboard() {
                 if (res.result == "done") {
                     setEmpName(response.data.empName);
                     setDayOff(response.data.dayOff);
+                    setshowroom_name(response.data.showroom_name)
+                    setShowroomLocation({
+                        latitude: response.data.latitude,
+                        longitude: response.data.longitude,
+                        range: response.data.range
+                    })
+                    setloading_location(false)
                 }
                 else {
                     //something wrong
@@ -203,7 +211,34 @@ export default function Dashboard() {
         navigate("/")
     }
 
-    let distance = Math.sqrt((showroomLocation.latitude - geoLocation[0]) * (showroomLocation.latitude - geoLocation[0]) + (showroomLocation.longitude - geoLocation[1]) * (showroomLocation.longitude - geoLocation[1]));
+
+    function getDistance(lat1, lat2, lon1, lon2) {
+        lon1 = lon1 * Math.PI / 180;
+        lon2 = lon2 * Math.PI / 180;
+        lat1 = lat1 * Math.PI / 180;
+        lat2 = lat2 * Math.PI / 180;
+
+        // Haversine formula
+        let dlon = lon2 - lon1;
+        let dlat = lat2 - lat1;
+        let a = Math.pow(Math.sin(dlat / 2), 2)
+            + Math.cos(lat1) * Math.cos(lat2)
+            * Math.pow(Math.sin(dlon / 2), 2);
+
+        let c = 2 * Math.asin(Math.sqrt(a));
+
+        // Radius of earth in kilometers. Use 3956
+        // for miles
+        let r = 6371 * 1000;
+
+        // calculate the result
+        return (c * r);
+    }
+
+
+    //let distance = Math.sqrt((parseFloat(showroomLocation.latitude) - geoLocation[0]) * (parseFloat(showroomLocation.latitude) - geoLocation[0]) + (showroomLocation.longitude - geoLocation[1]) * (showroomLocation.longitude - geoLocation[1]));
+    let distance = getDistance(parseFloat(showroomLocation.latitude), geoLocation[0], parseFloat(showroomLocation.longitude), geoLocation[1])
+
     return (
         <>
             <Title text="My Attendance" />
@@ -226,6 +261,7 @@ export default function Dashboard() {
                                 <tbody>
                                     <tr><td colSpan={2}>SEC Name: <b>{empName}</b></td></tr>
                                     <tr><td colSpan={2}>EmployeeID: <b>{empID}</b></td></tr>
+                                    <tr><td colSpan={2}>Showroom: <b>{showroom_name}</b> (Dist: {distance.toFixed(0)} m)</td></tr>
                                     <tr>
                                         <td>Day Off : <b>{dayOff}</b></td>
                                         <td align='right'><Button onClick={logoutMe} variant="outlined" size="small"><i className="fa fa-sign-out" style={{ marginRight: "5px" }}></i> LOGOUT</Button></td>
@@ -272,14 +308,14 @@ export default function Dashboard() {
                                     <h4 align='center'>Todays Attendance</h4><hr />
                                     <form onSubmit={giveAttendance}>
                                         {
-                                            (distance <= showroomLocation.range * 0.00001) ?
-                                                <button style={{ background: "#06bf00", color: "white" }} onClick={() => { setStatus("Present") }} className='attendanceBtn' disabled={loading_location ? true : false}>{loading_location ? "Locating showroom..." : "PRESENT"}</button>
+                                            (distance <= showroomLocation.range) ?
+                                                <Button style={{ background: "#06bf00", color: "white", padding: "15px 0px 15px 0px", fontSize: "23px", fontWeight: "bold", marginBottom: "5px" }} onClick={() => { setStatus("Present") }} disabled={loading_location ? true : false} type="submit" fullWidth>{loading_location ? "Locating showroom..." : "PRESENT"}</Button>
                                                 :
-                                                <button className='attendanceBtn' disabled={true}>{loading_your_location ? "Locating your position..." : <font color='red' size="5">You are {(distance / 0.00001).toFixed(2)} meter away from showroom</font>}</button>
+                                                <Button style={{ marginBottom: "5px" }} fullWidth>{loading_your_location ? "Locating your position..." : <font color='red' size="4">You are <b>{(distance).toFixed(2)} meter </b>away from showroom</font>}</Button>
                                         }
                                         <br />
-                                        <button style={{ background: "#1976d2", color: "white" }} onClick={() => { setStatus("Day Off") }} className='attendanceBtn'>DAY OFF</button><br />
-                                        <button style={{ background: "#c1bfff", color: "#000" }} onClick={() => { setStatus("Sick Leave") }} className='attendanceBtn'>SICK LEAVE</button><br />
+                                        <Button style={{ background: "#1976d2", color: "white", padding: "15px 0px 15px 0px", fontSize: "23px", fontWeight: "bold", marginBottom: "5px" }} onClick={() => { setStatus("Day Off") }} type="submit" fullWidth>DAY OFF</Button><br />
+                                        <Button style={{ background: "#ac26ff", color: "#fff", padding: "15px 0px 15px 0px", fontSize: "23px", fontWeight: "bold" }} onClick={() => { setStatus("Sick Leave") }} type="submit" fullWidth>SICK LEAVE</Button><br />
                                     </form>
                                 </div>
                                 <Statistics empID={empID} day={getDay()} month={getMonth()} year={getYear()} />

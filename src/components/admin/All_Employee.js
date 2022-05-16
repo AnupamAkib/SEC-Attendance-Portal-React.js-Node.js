@@ -32,6 +32,10 @@ export default function All_Employee() {
     const [empPass, setEmpPass] = useState("")
     const [empID, setEmpID] = useState("")
     const [empDayOff, setEmpDayOff] = useState("")
+    const [showroom_name, setshowroom_name] = useState("")
+    const [latitude, setlatitude] = useState("")
+    const [longtide, setlongitude] = useState("")
+    const [range, setrange] = useState("")
 
     const [removebtnloading, setRemovebtnloading] = useState(false)
 
@@ -82,7 +86,11 @@ export default function All_Employee() {
         setEmpName("");
         setEmpID("");
         setEmpPass("");
-        setEmpDayOff("Saturday");
+        setshowroom_name("");
+        setlatitude("")
+        setlongitude("")
+        setrange("")
+        setEmpDayOff("Friday");
         setOpen_add(true);
     }
     const handleClose = () => setOpen(false);
@@ -114,7 +122,7 @@ export default function All_Employee() {
         setRemovebtnloading(true);
         axios.post('https://flash-shop-server.herokuapp.com/SEC/editEmployee', {
             //parameter
-            empName, empID, password: empPass, dayOff: empDayOff
+            empName, empID, password: empPass, dayOff: empDayOff, showroom_name: capital_letter(showroom_name), latitude, longitude: longtide, range
         })
             .then((response) => {
                 //console.log(response.data.data)
@@ -147,7 +155,7 @@ export default function All_Employee() {
         setbtn_loading(true);
         axios.post('https://flash-shop-server.herokuapp.com/SEC/addEmployee', {
             //parameter
-            empName: e_n, empID, password: empPass, dayOff: empDayOff
+            empName: e_n, empID, password: empPass, dayOff: empDayOff, showroom_name: capital_letter(showroom_name), latitude, longitude: longtide, range
         })
             .then((response) => {
                 //console.log(response.data)
@@ -175,7 +183,7 @@ export default function All_Employee() {
     for (let i = 0; i < allEmp.length; i++) {
         emp.push(
             <tr>
-                <td>{allEmp[i].empName}</td>
+                <td>{allEmp[i].empName} <font color="#a3a3a3">({allEmp[i].showroom_name})</font></td>
                 <td>{allEmp[i].dayOff}</td>
                 <td><center>
                     <Button variant="contained" onClick={() => {
@@ -184,6 +192,10 @@ export default function All_Employee() {
                         setEmpName(allEmp[i].empName);
                         setEmpPass(allEmp[i].password);
                         setEmpDayOff(allEmp[i].dayOff);
+                        setshowroom_name(allEmp[i].showroom_name);
+                        setlatitude(allEmp[i].latitude);
+                        setlongitude(allEmp[i].longitude);
+                        setrange(allEmp[i].range);
                         handleOpen();
                     }}>Edit
                     </Button></center>
@@ -192,6 +204,16 @@ export default function All_Employee() {
         )
     }
 
+
+
+    const locateMe = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((pos) => {
+                setlatitude(pos.coords.latitude)
+                setlongitude(pos.coords.longitude)
+            });
+        }
+    }
 
     return (
         <>
@@ -207,7 +229,7 @@ export default function All_Employee() {
                     <table className='table table-bordered table-striped'>
                         <thead>
                             <tr>
-                                <th>SEC Name</th>
+                                <th>Name & Showroom</th>
                                 <th>Day Off</th>
                                 <th><center>Action</center></th>
                             </tr>
@@ -234,6 +256,10 @@ export default function All_Employee() {
                                 <TextField fullWidth onChange={(e) => { setEmpID(e.target.value) }} value={empID} label="EmployeeID" variant="filled" InputProps={{ readOnly: true }} required /><br />
                                 <TextField fullWidth onChange={(e) => { setEmpPass(e.target.value) }} value={empPass} label="Password" variant="filled" required /><br />
 
+                                <TextField fullWidth onChange={(e) => { setshowroom_name(e.target.value) }} value={showroom_name} label="Showroom Name" variant="filled" required /><br />
+                                <TextField type="text" fullWidth onChange={(e) => { setlatitude(e.target.value) }} value={latitude} label="Showroom latitude" variant="filled" required /><br />
+                                <TextField type="text" fullWidth onChange={(e) => { setlongitude(e.target.value) }} value={longtide} label="Showroom longitude" variant="filled" required /><br />
+                                <TextField type="number" fullWidth onChange={(e) => { setrange(e.target.value) }} value={range} label="Range (Meter)" variant="filled" required /><br />
 
                                 <FormControl variant='filled' fullWidth>
                                     <InputLabel id="dayOff_label">Day Off</InputLabel>
@@ -253,8 +279,9 @@ export default function All_Employee() {
                                     </Select>
                                 </FormControl>
 
-                                <br /><br />
+                                <br />
                                 <center>
+                                    <Button onClick={() => locateMe()}>Locate my position</Button><br />
                                     <Button type='submit' variant="contained" disabled={removebtnloading} style={{ marginRight: "5px", width: "128px" }}>{removebtnloading ? "Working..." : <font size="3"><i className="fa fa-save" style={{ marginRight: "5px" }}></i> SAVE</font>}</Button>
                                     <Button variant="contained" color="error" onClick={() => {
                                         handleClick(empName, empID)
@@ -279,6 +306,12 @@ export default function All_Employee() {
                                 <TextField fullWidth onChange={(e) => { setEmpID(e.target.value) }} value={empID} placeholder="SEC EmployeeID" label="SEC EmployeeID" variant="filled" required /><br />
                                 <TextField fullWidth onChange={(e) => { setEmpPass(e.target.value) }} value={empPass} placeholder="Password" label="Password" variant="filled" required /><br />
 
+                                <TextField fullWidth onChange={(e) => { setshowroom_name(e.target.value) }} value={showroom_name} label="Showroom Name" variant="filled" required /><br />
+                                <TextField type="text" fullWidth onChange={(e) => { setlatitude(e.target.value) }} value={latitude} label="Showroom latitude" variant="filled" required /><br />
+                                <TextField type="text" fullWidth onChange={(e) => { setlongitude(e.target.value) }} value={longtide} label="Showroom longitude" variant="filled" required /><br />
+                                <TextField type="number" fullWidth onChange={(e) => { setrange(e.target.value) }} value={range} label="Range (Meter)" variant="filled" required /><br />
+
+
                                 <FormControl variant='filled' fullWidth>
                                     <InputLabel id="dayOff_label">Day Off</InputLabel>
                                     <Select
@@ -296,8 +329,9 @@ export default function All_Employee() {
                                         <MenuItem value='Friday'>Friday</MenuItem>
                                     </Select>
                                 </FormControl>
-                                <br /><br />
+                                <br />
                                 <center>
+                                    <Button onClick={() => locateMe()}>Locate my position</Button><br />
                                     <Button type='submit' variant="contained" disabled={btn_loading}>{btn_loading ? "Please Wait" : <font size='3'><i className="fa fa-plus-square" style={{ marginRight: "5px" }}></i>ADD {empName.split(" ")[empName.split(" ").length - 1]}</font>}</Button>
                                 </center>
                             </form>

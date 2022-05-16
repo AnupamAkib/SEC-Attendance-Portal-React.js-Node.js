@@ -100,7 +100,6 @@ const ResponsiveAppBar = () => {
                                             <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/") }}>Home</MenuItem>
                                             <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/admin/report") }}>Report</MenuItem>
                                             <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/admin/all_employee") }}>All SEC</MenuItem>
-                                            <MenuItem onClick={() => { handleCloseNavMenu(); navigate("/admin/showroom_location") }}>Showroom Location</MenuItem>
                                             <MenuItem onClick={() => { localStorage.setItem("admin_logged_in", "false"); handleCloseNavMenu(); navigate("/admin") }}>Logout</MenuItem>
                                         </Menu>
                                         :
@@ -197,7 +196,6 @@ const ResponsiveAppBar = () => {
                                         <Button onClick={() => navigate("/")} sx={{ my: 1, color: 'white', display: 'block', mr: 3 }}>Home</Button>
                                         <Button onClick={() => navigate("/admin/report")} sx={{ my: 1, color: 'white', display: 'block', mr: 3 }}>Report</Button>
                                         <Button onClick={() => navigate("/admin/all_employee")} sx={{ my: 1, color: 'white', display: 'block', mr: 3 }}>All Sec</Button>
-                                        <Button onClick={() => navigate("/admin/showroom_location")} sx={{ my: 1, color: 'white', display: 'block', mr: 3 }}>Showroom location</Button>
                                         <Button onClick={() => { localStorage.setItem("admin_logged_in", "false"); navigate("/admin") }} sx={{ my: 1, color: 'white', display: 'block', mr: 3 }}>logout</Button>
                                     </Box>
                                     :
