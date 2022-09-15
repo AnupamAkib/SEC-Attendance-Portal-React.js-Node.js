@@ -1,3 +1,4 @@
+![Project Preview](https://github.com/AnupamAkib/SEC-Attendance-Portal-React.js-Node.js/blob/main/InShot_20220728_180708397_AdobeExpress%20(1).gif?raw=true)
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
