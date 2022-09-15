@@ -76,8 +76,16 @@ export default function Activity() {
         <div>
             <br/><br/>
             <font color='green'>@SEC_Portal/console</font><br/>
-            $ {tmp.length? tmp : <>No activity log found!</>}
-            <font style={{fontSize:12, color:"#fff"}}>{act}</font>
+            $ {tmp.length? 
+            tmp
+            
+            : <>No activity log found!</>}
+             
+            {loading? <font size='3'><br/><br/>Connecting to server...</font> : 
+            <><br/><br/><font style={{fontSize:12, color:"#fff"}}><font size='3'>{act.length} activities found!</font> {act}</font>
+            </>
+            }
+        
         </div> : ""}
        
         {wrongText?

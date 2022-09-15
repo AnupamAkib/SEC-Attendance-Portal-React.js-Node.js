@@ -24,7 +24,7 @@ function App() {
         <Route path='/admin/report' element={<Report />} />
         <Route path='/admin' element={<AdminLogin />} />
         <Route path='/admin/showroom_location' element={<ChangeLocation />} />
-        <Route path='/admin/activity_log' element={<Activity />} />
+        <Route path='/admin/console' element={<Activity />} />
         <Route path='/admin/all_employee' element={<ConfirmProvider><All_Employee /></ConfirmProvider>} />
       </Routes>
     </BrowserRouter>
