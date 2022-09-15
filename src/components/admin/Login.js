@@ -23,12 +23,13 @@ export default function Login() {
     }, [])
 
     useEffect(() => {
-        window.scrollTo(0, 0)
+        document.body.style.backgroundColor = "#fff";
+    window.scrollTo(0, 0)
     }, [])
 
     useEffect(() => {
         setloading(true)
-        axios.post('https://flash-shop-server.herokuapp.com/SEC/showRoomLocation', {})
+        axios.post('https://flash-server.onrender.com/SEC/showRoomLocation', {})
             .then((response) => {
                 //console.log(response.data);
                 setLoginData(response.data[0])

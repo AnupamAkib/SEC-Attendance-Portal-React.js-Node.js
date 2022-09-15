@@ -46,7 +46,8 @@ export default function All_Employee() {
     }, [])
 
     useEffect(() => {
-        window.scrollTo(0, 0)
+        document.body.style.backgroundColor = "#fff";
+    window.scrollTo(0, 0)
     }, [])
 
     const confirm = useConfirm();
@@ -54,7 +55,8 @@ export default function All_Employee() {
         confirm({ description: 'SEC ' + e_name + ' will be removed permanently!' })
             .then(() => {
                 setRemovebtnloading(true)
-                axios.post('https://flash-shop-server.herokuapp.com/SEC/removeEmployee', {
+                save_activity("Admin", "Removed  "+empName+" as SEC");
+                axios.post('https://flash-server.onrender.com/SEC/removeEmployee', {
                     //parameter
                     empID: e_id
                 })
@@ -102,7 +104,7 @@ export default function All_Employee() {
     const [allEmp, setAllEmp] = useState([])
     useEffect(() => {
         setloading(true)
-        axios.post('https://flash-shop-server.herokuapp.com/SEC/getAllEmployee', {
+        axios.post('https://flash-server.onrender.com/SEC/getAllEmployee', {
             //parameter
         })
             .then((response) => {
@@ -118,9 +120,33 @@ export default function All_Employee() {
             });
     }, [loading_after_edit])
 
+    const save_activity = (_role, _activity) => {
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth()+1;
+        var y = date.getFullYear();
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        var strTime = hours + ':' + minutes + ' ' + ampm;
+        const t = d+"/"+m+"/"+y+" "+strTime;
+        axios.post('https://flash-server.onrender.com/SEC/add_activity', {
+                time : t,
+                role : _role,
+                activity: _activity
+        })
+            .then((response) => {
+            }, (error) => {
+            });
+    }
+
     const editEmp = (e) => {
+        save_activity("Admin", "Edited "+empName+"'s information");
         setRemovebtnloading(true);
-        axios.post('https://flash-shop-server.herokuapp.com/SEC/editEmployee', {
+        axios.post('https://flash-server.onrender.com/SEC/editEmployee', {
             //parameter
             empName, empID, password: empPass, dayOff: empDayOff, showroom_name: capital_letter(showroom_name), latitude, longitude: longtide, range
         })
@@ -150,10 +176,11 @@ export default function All_Employee() {
     }
 
     const addEmp = (e) => {
+        save_activity("Admin", "Added "+empName+" as SEC");
         setEmpName((prev) => capital_letter(prev))
         let e_n = capital_letter(empName)
         setbtn_loading(true);
-        axios.post('https://flash-shop-server.herokuapp.com/SEC/addEmployee', {
+        axios.post('https://flash-server.onrender.com/SEC/addEmployee', {
             //parameter
             empName: e_n, empID, password: empPass, dayOff: empDayOff, showroom_name: capital_letter(showroom_name), latitude, longitude: longtide, range
         })

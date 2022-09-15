@@ -18,14 +18,39 @@ export default function Login() {
     }, [])
 
     useEffect(() => {
-        window.scrollTo(0, 0)
+        document.body.style.backgroundColor = "#fff";
+    window.scrollTo(0, 0)
     }, [])
+
+    const save_activity = (_role, _activity) => {
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth()+1;
+        var y = date.getFullYear();
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        var strTime = hours + ':' + minutes + ' ' + ampm;
+        const t = d+"/"+m+"/"+y+" "+strTime;
+        axios.post('https://flash-server.onrender.com/SEC/add_activity', {
+                time : t,
+                role : _role,
+                activity: _activity
+        })
+            .then((response) => {
+            }, (error) => {
+            });
+    }
+
 
     const formSubmit = (e) => {
         //console.log(empID);
         //console.log(password);
         setloading(true)
-        axios.post('https://flash-shop-server.herokuapp.com/SEC/SEC_login', {
+        axios.post('https://flash-server.onrender.com/SEC/SEC_login', {
             //parameters
             empID, password
         })
@@ -37,6 +62,7 @@ export default function Login() {
                     localStorage.setItem("password", password);
                     let toast = require("./toast_bar")
                     toast.msg("Login Successful", "green", 3000)
+                    save_activity("SEC", "EmployeeID "+empID+" logged in")
                     navigate("/attendance");
                 }
                 else {

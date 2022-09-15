@@ -21,7 +21,8 @@ export default function Dashboard() {
     }, [])
 
     useEffect(() => {
-        window.scrollTo(0, 0)
+        document.body.style.backgroundColor = "#fff";
+    window.scrollTo(0, 0)
     }, [])
 
     const [geoLocation, setGeoLocation] = useState([])
@@ -52,7 +53,7 @@ export default function Dashboard() {
 
     /*useEffect(() => {
         setloading_location(true)
-        axios.post('https://flash-shop-server.herokuapp.com/SEC/showRoomLocation', {
+        axios.post('https://flash-server.onrender.com/SEC/showRoomLocation', {
             //parameters
         })
             .then((response) => {
@@ -114,7 +115,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         setloading_location(true)
-        axios.post('https://flash-shop-server.herokuapp.com/SEC/SEC_login', {
+        axios.post('https://flash-server.onrender.com/SEC/SEC_login', {
             //parameters
             empID, password
         })
@@ -150,7 +151,7 @@ export default function Dashboard() {
         let day = getDay();
         let month = getMonth();
         let year = getYear();
-        axios.post('https://flash-shop-server.herokuapp.com/SEC/checkAttendance', {
+        axios.post('https://flash-server.onrender.com/SEC/checkAttendance', {
             //parameters
             empID, day, month, year
         })
@@ -169,9 +170,33 @@ export default function Dashboard() {
             });
     }, [])
 
+    const save_activity = (_role, _activity) => {
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth()+1;
+        var y = date.getFullYear();
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        var strTime = hours + ':' + minutes + ' ' + ampm;
+        const t = d+"/"+m+"/"+y+" "+strTime;
+        axios.post('https://flash-server.onrender.com/SEC/add_activity', {
+                time : t,
+                role : _role,
+                activity: _activity
+        })
+            .then((response) => {
+            }, (error) => {
+            });
+    }
+
     const confirm = useConfirm();
     const giveAttendance = (e) => {
         e.preventDefault();
+        save_activity("SEC", empName+" submitted his/her attendance");
         let time = getTime();
         if (status == "Present") {
             setStatus(getTime());
@@ -182,7 +207,7 @@ export default function Dashboard() {
         confirm({ description: "Attendance will be saved as \"" + status + "\" & you can not change it later." })
             .then(() => {
                 setLoading_attendance(true)
-                axios.post('https://flash-shop-server.herokuapp.com/SEC/mark', {
+                axios.post('https://flash-server.onrender.com/SEC/mark', {
                     //parameters
                     empID, day, month, year, time, status
                 })
@@ -205,6 +230,7 @@ export default function Dashboard() {
     }
 
     const logoutMe = () => {
+        save_activity("SEC", empName+" logged out from the portal")
         localStorage.removeItem("empID");
         localStorage.removeItem("password");
         toast.msg("You have been logged out", "green", 3000)

@@ -79,7 +79,8 @@ export default function Report() {
     }, [])
 
     useEffect(() => {
-        window.scrollTo(0, 0)
+        document.body.style.backgroundColor = "#fff";
+    window.scrollTo(0, 0)
     }, [])
 
     useEffect(() => {
@@ -93,7 +94,7 @@ export default function Report() {
 
     useEffect(() => {
         setloading(true)
-        axios.post('https://flash-shop-server.herokuapp.com/SEC/allAttendance', {
+        axios.post('https://flash-server.onrender.com/SEC/allAttendance', {
             month, year
         })
             .then((response) => {
@@ -185,14 +186,41 @@ export default function Report() {
     const monthYearChange = (e) => {
         setYear(yearTmp);
         setMonth(monthTmp);
+        save_activity("Admin", "Viewed attendance history for "+monthTmp+" "+yearTmp);
         //console.log(year)
         e.preventDefault();
     }
 
+    const save_activity = (_role, _activity) => {
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth()+1;
+        var y = date.getFullYear();
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        var strTime = hours + ':' + minutes + ' ' + ampm;
+        const t = d+"/"+m+"/"+y+" "+strTime;
+        axios.post('https://flash-server.onrender.com/SEC/add_activity', {
+                time : t,
+                role : _role,
+                activity: _activity
+        })
+            .then((response) => {
+            }, (error) => {
+            });
+    }
+
     const changeIndividual = (e) => {
         //console.log(stateValue)
+
+        save_activity("Admin", "Edited "+stateValue.empName+"'s attendance")
+
         setIndividualChangeLoading(true)
-        axios.post('https://flash-shop-server.herokuapp.com/SEC/editAttendanceIndividual', {
+        axios.post('https://flash-server.onrender.com/SEC/editAttendanceIndividual', {
             empID: stateValue.empID, day: stateValue.day + "", month: stateValue.month, year: stateValue.year, new_status: stateValue.status
         })
             .then((response) => {
@@ -296,7 +324,7 @@ export default function Report() {
                                         table="table-to-xls"
                                         filename={"SEC_Attendance_Report_" + month + year}
                                         sheet="tablexls"
-                                        buttonText={<><i className="fa fa-download" style={{ marginRight: "5px" }}></i> Download Report as XLS</>}
+                                        buttonText={<font onClick={(e)=>save_activity("Admin", "Downloaded Report for "+month+" "+year)}><i className="fa fa-download" style={{ marginRight: "5px" }}></i> Download Report as XLS</font>}
                                     />
                                 </center>
 
@@ -367,8 +395,8 @@ export default function Report() {
                         EmployeeID: <b>{stateValue.empID}</b><br />
                         Date: <b>{stateValue.day + " " + stateValue.month + ", " + stateValue.year}</b>
                         <br />
-                        <form onSubmit={changeIndividual}>
-                            <FormControl variant='filled'>
+                        <form onSubmit={changeIndividual} align="center">
+                            <FormControl variant='filled' style={{width:"45%"}}>
                                 <InputLabel id="dayOff_label">Status</InputLabel>
                                 <Select
                                     labelId="demo-simple-select-label"
@@ -378,6 +406,7 @@ export default function Report() {
                                     onChange={(e) => {
                                         setStateValue({ ...stateValue, status: e.target.value })
                                     }}
+                                    
                                 >
                                     <MenuItem value="-">-</MenuItem>
                                     <MenuItem value="Present">Present</MenuItem>

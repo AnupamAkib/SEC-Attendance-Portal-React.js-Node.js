@@ -6,7 +6,7 @@ export default function Footer() {
             <br />
             <div align='center' className='footer'>
                 <h1>SEC Portal</h1>
-                version 1.2
+                version 2.0
                 <hr />
                 Managed By <b>Mir Talibur Rahman</b><hr /><br />
                 2022 - Designed & Developed by<br /><a style={{ textDecoration: 'none', color: 'white', fontWeight: 'bold' }} href='http://facebook.com/anupam.akib' target="_blank">Mir Anupam Hossain Akib</a><br />

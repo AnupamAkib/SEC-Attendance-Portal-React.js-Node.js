@@ -23,12 +23,13 @@ export default function ChangeLocation() {
     }, [])
 
     useEffect(() => {
-        window.scrollTo(0, 0)
+        document.body.style.backgroundColor = "#fff";
+    window.scrollTo(0, 0)
     }, [])
 
     useEffect(() => {
         setloading(true)
-        axios.post('https://flash-shop-server.herokuapp.com/SEC/showRoomLocation', {
+        axios.post('https://flash-server.onrender.com/SEC/showRoomLocation', {
 
         })
             .then((response) => {
@@ -58,7 +59,7 @@ export default function ChangeLocation() {
     const changeShowRoomLocation = (e) => {
         e.preventDefault();
         setloading(true)
-        axios.post('https://flash-shop-server.herokuapp.com/SEC/change_showroom_location', {
+        axios.post('https://flash-server.onrender.com/SEC/change_showroom_location', {
             latitude, longitude, range, id: key
         })
             .then((response) => {
