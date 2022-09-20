@@ -261,7 +261,6 @@ export default function Dashboard() {
         return (c * r);
     }
 
-
     //let distance = Math.sqrt((parseFloat(showroomLocation.latitude) - geoLocation[0]) * (parseFloat(showroomLocation.latitude) - geoLocation[0]) + (showroomLocation.longitude - geoLocation[1]) * (showroomLocation.longitude - geoLocation[1]));
     let distance = getDistance(parseFloat(showroomLocation.latitude), geoLocation[0], parseFloat(showroomLocation.longitude), geoLocation[1])
 
@@ -275,10 +274,17 @@ export default function Dashboard() {
                 </div><br />
 
                 {loading_attendance || loading_info ?
-                    <div>
-                        <br />
+                    <div align='center'>
+                        {/*<br />
                         <font size="5">Please Wait</font>
-                        <LinearProgress />
+                <LinearProgress />*/}
+                    <img src='dog-loading.gif' width='100px'/><br/>
+                    <font size="4" color='gray'>
+                        <b>
+                        Connecting to Server<br/>
+                        </b></font>
+                        <font size="3" color='gray'>Refresh the page if it takes long time to load.</font>
+                    
                     </div>
                     :
                     <>
