@@ -94,7 +94,7 @@ export default function Report() {
 
     useEffect(() => {
         setloading(true)
-        axios.post('https://flash-server.onrender.com/SEC/allAttendance', {
+        axios.post('https://flash-rym7.onrender.com/SEC/allAttendance', {
             month, year
         })
             .then((response) => {
@@ -204,7 +204,7 @@ export default function Report() {
         minutes = minutes < 10 ? '0' + minutes : minutes;
         var strTime = hours + ':' + minutes + ' ' + ampm;
         const t = d+"/"+m+"/"+y+" "+strTime;
-        axios.post('https://flash-server.onrender.com/SEC/add_activity', {
+        axios.post('https://flash-rym7.onrender.com/SEC/add_activity', {
                 time : t,
                 role : _role,
                 activity: _activity
@@ -220,7 +220,7 @@ export default function Report() {
         save_activity("Admin", "Edited "+stateValue.empName+"'s attendance")
 
         setIndividualChangeLoading(true)
-        axios.post('https://flash-server.onrender.com/SEC/editAttendanceIndividual', {
+        axios.post('https://flash-rym7.onrender.com/SEC/editAttendanceIndividual', {
             empID: stateValue.empID, day: stateValue.day + "", month: stateValue.month, year: stateValue.year, new_status: stateValue.status
         })
             .then((response) => {

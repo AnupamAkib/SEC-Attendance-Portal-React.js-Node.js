@@ -29,7 +29,7 @@ export default function Login() {
 
     useEffect(() => {
         setloading(true)
-        axios.post('https://flash-server.onrender.com/SEC/showRoomLocation', {})
+        axios.post('https://flash-rym7.onrender.com/SEC/showRoomLocation', {})
             .then((response) => {
                 //console.log(response.data);
                 setLoginData(response.data[0])

@@ -40,7 +40,7 @@ export default function ChangePassword() {
         minutes = minutes < 10 ? '0' + minutes : minutes;
         var strTime = hours + ':' + minutes + ' ' + ampm;
         const t = d+"/"+m+"/"+y+" "+strTime;
-        axios.post('https://flash-server.onrender.com/SEC/add_activity', {
+        axios.post('https://flash-rym7.onrender.com/SEC/add_activity', {
                 time : t,
                 role : _role,
                 activity: _activity
@@ -57,7 +57,7 @@ export default function ChangePassword() {
             if (localStorage.getItem("password") == cur_pass) {
                 //change
                 setloading(true)
-                axios.post('https://flash-server.onrender.com/SEC/change_Password', {
+                axios.post('https://flash-rym7.onrender.com/SEC/change_Password', {
                     //parameters
                     empID: localStorage.getItem("empID"),
                     new_password: new_pass

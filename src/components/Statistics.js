@@ -11,7 +11,7 @@ export default function Statistics(props) {
     const [prevAttendance, setPrevAttendance] = useState([])
     const [loading, setloading] = useState(true)
     useEffect(() => {
-        axios.post('https://flash-server.onrender.com/SEC/allAttendance', {
+        axios.post('https://flash-rym7.onrender.com/SEC/allAttendance', {
             //parameters
             month, year
         })

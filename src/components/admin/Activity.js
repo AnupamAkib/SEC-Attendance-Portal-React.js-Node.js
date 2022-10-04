@@ -28,7 +28,7 @@ export default function Activity() {
 
     useEffect(() => {
         setloading(true)
-        axios.post('https://flash-server.onrender.com/SEC/view_activity', {
+        axios.post('https://flash-rym7.onrender.com/SEC/view_activity', {
 
         })
             .then((response) => {

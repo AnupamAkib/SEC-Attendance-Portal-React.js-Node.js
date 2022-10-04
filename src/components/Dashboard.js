@@ -53,7 +53,7 @@ export default function Dashboard() {
 
     /*useEffect(() => {
         setloading_location(true)
-        axios.post('https://flash-server.onrender.com/SEC/showRoomLocation', {
+        axios.post('https://flash-rym7.onrender.com/SEC/showRoomLocation', {
             //parameters
         })
             .then((response) => {
@@ -115,7 +115,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         setloading_location(true)
-        axios.post('https://flash-server.onrender.com/SEC/SEC_login', {
+        axios.post('https://flash-rym7.onrender.com/SEC/SEC_login', {
             //parameters
             empID, password
         })
@@ -151,7 +151,7 @@ export default function Dashboard() {
         let day = getDay();
         let month = getMonth();
         let year = getYear();
-        axios.post('https://flash-server.onrender.com/SEC/checkAttendance', {
+        axios.post('https://flash-rym7.onrender.com/SEC/checkAttendance', {
             //parameters
             empID, day, month, year
         })
@@ -183,7 +183,7 @@ export default function Dashboard() {
         minutes = minutes < 10 ? '0' + minutes : minutes;
         var strTime = hours + ':' + minutes + ' ' + ampm;
         const t = d+"/"+m+"/"+y+" "+strTime;
-        axios.post('https://flash-server.onrender.com/SEC/add_activity', {
+        axios.post('https://flash-rym7.onrender.com/SEC/add_activity', {
                 time : t,
                 role : _role,
                 activity: _activity
@@ -207,7 +207,7 @@ export default function Dashboard() {
         confirm({ description: "Attendance will be saved as \"" + status + "\" & you can not change it later." })
             .then(() => {
                 setLoading_attendance(true)
-                axios.post('https://flash-server.onrender.com/SEC/mark', {
+                axios.post('https://flash-rym7.onrender.com/SEC/mark', {
                     //parameters
                     empID, day, month, year, time, status
                 })

@@ -56,7 +56,7 @@ export default function All_Employee() {
             .then(() => {
                 setRemovebtnloading(true)
                 save_activity("Admin", "Removed  "+empName+" as SEC");
-                axios.post('https://flash-server.onrender.com/SEC/removeEmployee', {
+                axios.post('https://flash-rym7.onrender.com/SEC/removeEmployee', {
                     //parameter
                     empID: e_id
                 })
@@ -104,7 +104,7 @@ export default function All_Employee() {
     const [allEmp, setAllEmp] = useState([])
     useEffect(() => {
         setloading(true)
-        axios.post('https://flash-server.onrender.com/SEC/getAllEmployee', {
+        axios.post('https://flash-rym7.onrender.com/SEC/getAllEmployee', {
             //parameter
         })
             .then((response) => {
@@ -133,7 +133,7 @@ export default function All_Employee() {
         minutes = minutes < 10 ? '0' + minutes : minutes;
         var strTime = hours + ':' + minutes + ' ' + ampm;
         const t = d+"/"+m+"/"+y+" "+strTime;
-        axios.post('https://flash-server.onrender.com/SEC/add_activity', {
+        axios.post('https://flash-rym7.onrender.com/SEC/add_activity', {
                 time : t,
                 role : _role,
                 activity: _activity
@@ -146,7 +146,7 @@ export default function All_Employee() {
     const editEmp = (e) => {
         save_activity("Admin", "Edited "+empName+"'s information");
         setRemovebtnloading(true);
-        axios.post('https://flash-server.onrender.com/SEC/editEmployee', {
+        axios.post('https://flash-rym7.onrender.com/SEC/editEmployee', {
             //parameter
             empName, empID, password: empPass, dayOff: empDayOff, showroom_name: capital_letter(showroom_name), latitude, longitude: longtide, range
         })
@@ -180,7 +180,7 @@ export default function All_Employee() {
         setEmpName((prev) => capital_letter(prev))
         let e_n = capital_letter(empName)
         setbtn_loading(true);
-        axios.post('https://flash-server.onrender.com/SEC/addEmployee', {
+        axios.post('https://flash-rym7.onrender.com/SEC/addEmployee', {
             //parameter
             empName: e_n, empID, password: empPass, dayOff: empDayOff, showroom_name: capital_letter(showroom_name), latitude, longitude: longtide, range
         })

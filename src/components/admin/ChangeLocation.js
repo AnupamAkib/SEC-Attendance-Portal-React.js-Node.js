@@ -29,7 +29,7 @@ export default function ChangeLocation() {
 
     useEffect(() => {
         setloading(true)
-        axios.post('https://flash-server.onrender.com/SEC/showRoomLocation', {
+        axios.post('https://flash-rym7.onrender.com/SEC/showRoomLocation', {
 
         })
             .then((response) => {
@@ -59,7 +59,7 @@ export default function ChangeLocation() {
     const changeShowRoomLocation = (e) => {
         e.preventDefault();
         setloading(true)
-        axios.post('https://flash-server.onrender.com/SEC/change_showroom_location', {
+        axios.post('https://flash-rym7.onrender.com/SEC/change_showroom_location', {
             latitude, longitude, range, id: key
         })
             .then((response) => {

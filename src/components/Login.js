@@ -35,7 +35,7 @@ export default function Login() {
         minutes = minutes < 10 ? '0' + minutes : minutes;
         var strTime = hours + ':' + minutes + ' ' + ampm;
         const t = d+"/"+m+"/"+y+" "+strTime;
-        axios.post('https://flash-server.onrender.com/SEC/add_activity', {
+        axios.post('https://flash-rym7.onrender.com/SEC/add_activity', {
                 time : t,
                 role : _role,
                 activity: _activity
@@ -50,7 +50,7 @@ export default function Login() {
         //console.log(empID);
         //console.log(password);
         setloading(true)
-        axios.post('https://flash-server.onrender.com/SEC/SEC_login', {
+        axios.post('https://flash-rym7.onrender.com/SEC/SEC_login', {
             //parameters
             empID, password
         })
