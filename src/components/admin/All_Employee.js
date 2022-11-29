@@ -224,7 +224,7 @@ export default function All_Employee() {
                         setlongitude(allEmp[i].longitude);
                         setrange(allEmp[i].range);
                         handleOpen();
-                    }}>Edit
+                    }}><i className='fa fa-edit' style={{marginRight:"5px"}}></i>Edit
                     </Button></center>
                 </td>
             </tr>
@@ -244,8 +244,11 @@ export default function All_Employee() {
 
     return (
         <>
-            <Title text="All SEC" />
-            <div className='container col-9'>
+            <Title text="Manage SEC" />
+            <center>
+                <Button onClick={handleOpen_add} variant="outlined" size="large"><i className="fa fa-plus" style={{marginRight:"8px"}}></i>ADD NEW SEC</Button><br/><br/>
+            </center>
+            <div className='container col-6'>
                 {loading ?
                     <div className="col-5 container">
                         <br /><br /><br />
@@ -253,6 +256,7 @@ export default function All_Employee() {
                         <LinearProgress />
                     </div>
                     :
+                    <>
                     <table className='table table-bordered table-striped'>
                         <thead>
                             <tr>
@@ -264,7 +268,8 @@ export default function All_Employee() {
                         <tbody>
                             {emp}
                         </tbody>
-                    </table>
+                    </table><br/>
+                    </>
                 }
 
 
@@ -366,7 +371,7 @@ export default function All_Employee() {
                     </Modal>
                 </div>
 
-                <button onClick={handleOpen_add} className="addSEC_btn"><i className="fa fa-plus"></i></button>
+                
             </div></>
     )
 }

@@ -80,7 +80,7 @@ export default function Report() {
 
     useEffect(() => {
         document.body.style.backgroundColor = "#fff";
-    window.scrollTo(0, 0)
+        window.scrollTo(0, 0)
     }, [])
 
     useEffect(() => {
@@ -150,10 +150,12 @@ export default function Report() {
     }
 
     report = []
+
     for (let i = 0; i < attendance.length; i++) {
         tmp = [];
         let dayOff = [];
         let sickLeave = [], workingDay = 0;
+        let lateDate = [];
         tmp.push(<td style={{ background: "#fffc99" }}><font color="#000"><b>{attendance[i].empName}</b></font></td>)
         let status = attendance[i].status;
         let x = daysInMonth(month, year)
@@ -172,22 +174,40 @@ export default function Report() {
 
             if (status[j] == "Day Off") dayOff.push(j + 1);
             else if (status[j] == "Sick Leave") sickLeave.push(j + 1);
-            else if (status[j] != "-") workingDay++;
+            else if (status[j] != "-" && status[j]) {
+                workingDay++;
+                let time = status[j];
+                let hour = time.split(':')[0];
+                let minute = time.split(':')[1].split(' ')[0];
+                let ampm = time.split(':')[1].split(' ')[1];
+                //console.log({hour, minute, ampm})
+                if(ampm=="PM"){
+                    lateDate.push(j+1);
+                }
+                else if((parseInt(hour) == 10 && parseInt(minute) > 30 && ampm == "AM")){
+                    lateDate.push(j+1);
+                }
+                else if((parseInt(hour) > 10 && ampm == "AM")){ 
+                    lateDate.push(j+1);
+                }
+            }
         }
         report.push(<tr align='center'>{tmp}</tr>)
         details.push({
             empName: attendance[i].empName,
             dayOff,
             sickLeave,
-            workingDay
+            workingDay,
+            lateDate
         })
     }
 
     const monthYearChange = (e) => {
         setYear(yearTmp);
         setMonth(monthTmp);
-        save_activity("Admin", "Viewed attendance history for "+monthTmp+" "+yearTmp);
-        //console.log(year)
+        //save_activity("Admin", "Viewed attendance history for "+monthTmp+" "+yearTmp);
+        //console.log(yearTmp)
+        //console.log(monthTmp)
         e.preventDefault();
     }
 
@@ -215,10 +235,11 @@ export default function Report() {
     }
 
     const changeIndividual = (e) => {
-        //console.log(stateValue)
+        /*console.log(localStorage.getItem("prev_state"));
+        console.log(stateValue.status);*/
 
-        save_activity("Admin", "Edited "+stateValue.empName+"'s attendance")
-
+        save_activity("Admin", `Edited ${stateValue.empName}'s attendance of ${stateValue.day} ${stateValue.month}, ${stateValue.year} (from '${localStorage.getItem("prev_state")}' to '${stateValue.status}')`)
+        localStorage.removeItem("prev_state")
         setIndividualChangeLoading(true)
         axios.post('https://flash-rym7.onrender.com/SEC/editAttendanceIndividual', {
             empID: stateValue.empID, day: stateValue.day + "", month: stateValue.month, year: stateValue.year, new_status: stateValue.status
@@ -306,7 +327,7 @@ export default function Report() {
                         <LinearProgress />
                     </div>
                     :
-                    <div className="table-responsive">
+                    <div className="">
                         {notFound ?
                             <>
                                 <br />
@@ -328,53 +349,65 @@ export default function Report() {
                                     />
                                 </center>
 
-
-                                <table className='table table-striped table-bordered' width="100%" border="1" id="table-to-xls">
-                                    <thead>
-                                        <tr><td colSpan={daysInMonth(month, year) + 1}><br />
-                                            <font size='4'><b>Pragati Sarani SEC Attendance ({month}, {year})</b></font>
-                                            <br /><br /></td></tr>
-                                        {report_header}
-                                    </thead>
-                                    <tbody>
-                                        {report}
-                                        <tr><td colSpan={daysInMonth(month, year) + 1}><br />
-                                            <font size='4'><b>Day Off / Casual Leave / Sick Leave </b></font>
-                                            <br /><br /></td></tr>
-                                        <tr align='center'>
-                                            <th colSpan={2}>SEC Name</th>
-                                            <th colSpan={2}>Casual/Sick Leave</th>
-                                            <th colSpan={2}>Day Off</th>
-                                            <th colSpan={2}>Working Days</th>
-                                        </tr>
-                                        {details.map((d) =>
-                                            <tr align='center'>
-                                                <td colSpan={2}>{d.empName}</td>
-                                                {
-                                                    d.sickLeave.length ?
-                                                        <td colSpan={2}>{d.sickLeave.length}{d.sickLeave.length > 1 ? " Days (" : " Day ("}<b>{printArray(d.sickLeave)}</b>{")"}</td>
-                                                        :
-                                                        <td colSpan={2}>-</td>
-                                                }
-                                                {
-                                                    d.dayOff.length ?
-                                                        <td colSpan={2}>{d.dayOff.length}{d.dayOff.length > 1 ? " Days (" : " Day ("}<b>{printArray(d.dayOff)}</b>{")"}</td>
-                                                        :
-                                                        <td colSpan={2}>-</td>
-                                                }
-                                                <td colSpan={2}>{d.workingDay}</td>
-
-                                            </tr>
-                                        )}
-                                        <tr>
-                                            <td colSpan={daysInMonth(month, year) + 1} align='center'>
-                                                Generated by <b>SEC Portal App</b><br />
-                                                Date: {d.getDate() + " " + month_name[d.getMonth()] + ", " + d.getFullYear()}<br />
-                                                Developed by <a href="http://facebook.com/anupam.akib">Mir Anupam Hossain Akib</a>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table></>
+                                <div  id="table-wrapper">
+                                    <div  id="table-scroll">
+                                        <table className='reportBox table table-striped table-bordered' width="100%" border="1" id="table-to-xls">
+                                            <thead>
+                                                <tr><td colSpan={daysInMonth(month, year) + 1}><br />
+                                                    <font size='4'><b>Pragati Sarani SEC Attendance ({month}, {year})</b></font>
+                                                    <br /><br /></td></tr>
+                                                {report_header}
+                                            </thead>
+                                            <tbody>
+                                                {report}
+                                                <tr><td colSpan={daysInMonth(month, year) + 1}><br />
+                                                    <font size='4'><b>Day Off / Casual Leave / Sick Leave </b></font>
+                                                    <br /><br /></td></tr>
+                                                <tr align='center'>
+                                                    <th colSpan={2}>SEC Name</th>
+                                                    <th colSpan={2}>Casual/Sick Leave</th>
+                                                    <th colSpan={2}>Day Off</th>
+                                                    <th colSpan={2}>Working Days</th>
+                                                    <th colSpan={2}>Late Days</th>
+                                                    <th colSpan={2}>Late Fees</th>
+                                                </tr>
+                                                {details.map((d) =>
+                                                    <tr align='center'>
+                                                        <td colSpan={2}>{d.empName}</td>
+                                                        {
+                                                            d.sickLeave.length ?
+                                                                <td colSpan={2}>{d.sickLeave.length}{d.sickLeave.length > 1 ? " Days (" : " Day ("}<b>{printArray(d.sickLeave)}</b>{")"}</td>
+                                                                :
+                                                                <td colSpan={2}>-</td>
+                                                        }
+                                                        {
+                                                            d.dayOff.length ?
+                                                                <td colSpan={2}>{d.dayOff.length}{d.dayOff.length > 1 ? " Days (" : " Day ("}<b>{printArray(d.dayOff)}</b>{")"}</td>
+                                                                :
+                                                                <td colSpan={2}>-</td>
+                                                        }
+                                                        <td colSpan={2}>{d.workingDay}</td>
+                                                        {
+                                                            d.lateDate.length ?
+                                                                <td colSpan={2}>{d.lateDate.length}{d.lateDate.length > 1 ? " Days (" : " Day ("}<b>{printArray(d.lateDate)}</b>{")"}</td>
+                                                                :
+                                                                <td colSpan={2}>-</td>
+                                                        }
+                                                        <td colSpan={2}>{d.lateDate.length>3? d.lateDate.length*100 : 0} Taka</td>
+                                                    </tr>
+                                                )}
+                                                <tr>
+                                                    <td colSpan={daysInMonth(month, year) + 1} align='center'>
+                                                        Generated by <b>SEC Portal App</b><br />
+                                                        Date: {d.getDate() + " " + month_name[d.getMonth()] + ", " + d.getFullYear()}<br />
+                                                        Developed by <a href="http://facebook.com/anupam.akib">Mir Anupam Hossain Akib</a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </>
                         }
                     </div>
                 }
@@ -404,6 +437,12 @@ export default function Report() {
                                     value={(stateValue.status != "-" && stateValue.status != "Sick Leave" && stateValue.status != "Day Off") ? "Present" : stateValue.status}
                                     label="Status"
                                     onChange={(e) => {
+                                        {
+                                            localStorage.getItem("prev_state")?
+                                            localStorage.getItem("prev_state")
+                                            :
+                                            localStorage.setItem("prev_state", stateValue.status)
+                                        }
                                         setStateValue({ ...stateValue, status: e.target.value })
                                     }}
                                     

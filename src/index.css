@@ -3,9 +3,12 @@ body {
 }
 
 .attendanceButtonBody {
+  background-image: linear-gradient(to right, whitesmoke, #ddd);
   background-color: whitesmoke;
   padding: 15px;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  margin:5px;
 }
 
 .attendanceBtn {
@@ -59,6 +62,7 @@ body {
   font-size: 30px;
   border-radius: 100%;
   background-color: #1976d2;
+  opacity: 0.9;
   border: 0px;
   color: white;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
@@ -66,14 +70,21 @@ body {
 }
 
 .title_text {
-  background-color: skyblue;
-  background-image: linear-gradient(to right, rgb(0, 3, 156), #1976d2);
+  background-color: rgb(0, 106, 212);
+  background-image: linear-gradient(to right, #0052a3, rgb(91, 181, 216));
   font-size: 25px;
   padding: 15px 0px 15px 0px;
   font-weight: bold;
-  margin-top: -30px;
+  margin-top: -53px;
   margin-bottom: 15px;
   color: #fff;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.858);
+}
+.attendance_btn{
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.858);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+.textShadow{
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.858);
 }
 
@@ -89,3 +100,32 @@ body {
   color: white;
   padding: 7px;
 }
+
+
+
+#table-wrapper {
+  position:relative;
+}
+#table-scroll {
+  height:100%;
+  overflow:auto !important;  
+  margin-top:20px;
+}
+#table-wrapper table {
+  width:100%;
+
+}
+
+#table-wrapper table thead th .text {
+  position:absolute !important;    
+  z-index:2;
+  height:100%px;
+  width:35%;
+  border:1px solid red;
+}
+
+@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap");
+.App {
+  font-family: sans-serif;
+}
+

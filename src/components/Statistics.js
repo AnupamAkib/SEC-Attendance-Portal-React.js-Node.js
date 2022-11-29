@@ -8,6 +8,8 @@ export default function Statistics(props) {
     let month = props.month;
     let year = props.year;
     let day = props.day;
+
+    //console.log({empID, day, month, year})
     const [prevAttendance, setPrevAttendance] = useState([])
     const [loading, setloading] = useState(true)
     useEffect(() => {
@@ -38,7 +40,8 @@ export default function Statistics(props) {
     }
     let sickLeave = [];
     let dayOff = [];
-    let workingDay = 0;
+    let lateDate=[];
+    let workingDay = 0, late=0;
     for (let i = 1; i <= day; i++) {
         if (prevAttendance[i - 1] == "Sick Leave") {
             sickLeave.push(i)
@@ -48,8 +51,30 @@ export default function Statistics(props) {
         }
         else if (prevAttendance[i - 1] != "-" && prevAttendance.length) {
             workingDay++;
+
+            //late and late fee count
+            let time = prevAttendance[i - 1];
+            let hour = time.split(':')[0];
+            let minute = time.split(':')[1].split(' ')[0];
+            let ampm = time.split(':')[1].split(' ')[1];
+            //console.log({hour, minute, ampm})
+            if(ampm=="PM"){
+                late++;
+                lateDate.push(i);
+            }
+            else if((parseInt(hour) == 10 && parseInt(minute) > 30 && ampm == "AM")){
+                late++;
+                lateDate.push(i);
+            }
+            else if((parseInt(hour) > 10 && ampm == "AM")){ 
+                late++;
+                lateDate.push(i);
+            }
         }
     }
+    
+
+    
 
     const printArray = (ar) => {
         let tmp = [];
@@ -71,9 +96,16 @@ export default function Statistics(props) {
         <div style={{ padding: "15px" }}><br />
             <h3 align='center'>Attendance (till {day + " " + month + ", " + year})</h3><hr />
             <font size='4'>
+                <h3>General Information:</h3>
                 Day Off:<b> {dayOff.length} Day{dayOff.length > 1 ? "s" : ""} </b>{dayOff.length ? <>({printArray(dayOff)})</> : ""} <br />
                 Casual/Sick leave:<b> {sickLeave.length} Day{sickLeave.length > 1 ? "s" : ""} </b>{sickLeave.length ? <>({printArray(sickLeave)})</> : ""} <br />
-                Working Days: <b>{workingDay} Day{workingDay > 1 ? "s" : ""}</b>
+                Working Days: <b>{workingDay} Day{workingDay > 1 ? "s" : ""}</b><br/>
+                <br/><h3>Late fee calculation:</h3>
+                Total Late Count: <b>{late} Day{late > 1 ? "s" : ""}</b><br/>
+                Late Dates: {printArray(lateDate)} {month}<br/>
+                Late Fee: <b>{late>3? <>{late}*100 = {late*100} Taka</> : "0 Taka"}</b><br/>
+                Comment: <b>{late<=3? "okay" : "late fee counted"}</b><br/>
+                
             </font><hr />
             <table className='table table-striped' width="100%" border="0px" cellSpacing="0px" cellPadding="8px">
                 <thead>

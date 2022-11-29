@@ -4,6 +4,8 @@ import {useState} from 'react'
 import {useEffect} from 'react'
 import { Navigate, useNavigate } from "react-router-dom";
 import ActivityCard from './ActivityCard';
+import Title from '../Title';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function Activity() {
     let navigate = useNavigate();
@@ -22,8 +24,7 @@ export default function Activity() {
     }, [])
 
     useEffect(() => {
-        document.body.style.backgroundColor = "#000";
-    window.scrollTo(0, 0)
+        window.scrollTo(0, 0)
     }, [])
 
     useEffect(() => {
@@ -34,14 +35,14 @@ export default function Activity() {
             .then((response) => {
                 setloading(false)
                 setActivity(response.data)
-                console.log(response.data)
+                //console.log(response.data)
             }, (error) => {
                 console.log(error);
             });
     }, [])
 
     let act = [];
-    for(let i=0; i<activity.length; i++){
+    for(let i=activity.length-1, j=0; (j<200 && i>=0); i--, j++){
         act.push(
             <ActivityCard 
             time={activity[i].time}
@@ -50,66 +51,23 @@ export default function Activity() {
             />
         )
     }
-    act.reverse();
+    //act.reverse();
 
 
-    const consoleQuery = (e) =>{
-        settmp(consoleText);
-        if(consoleText=="portal --activity"){
-            setactivity_flag(true);
-            setConsoleText("")
-        }
-        else if(consoleText=="portal --v"){
-            setversionflag(true);
-            setConsoleText("")
-        }
-        else if(consoleText!=''){
-            setwrongText(true);
-            setConsoleText("")
-        }
-        e.preventDefault();
-    }
   return (
-    <div style={{background:"#000", color:"#fff"}} className='container'><pre>
-        <br/>
-        {activity_flag? 
-        <div>
-            <br/><br/>
-            <font color='green'>@SEC_Portal/console</font><br/>
-            $ {tmp.length? 
-            tmp
-            
-            : <>No activity log found!</>}
-             
-            {loading? <font size='3'><br/><br/>Connecting to server...</font> : 
-            <><br/><br/><font style={{fontSize:12, color:"#fff"}}><font size='3'>{act.length} activities found!</font> {act}</font>
-            </>
-            }
+    <>
+    <Title text="Activity Logs"/>
+    <div className='container col-6'>
         
-        </div> : ""}
-       
-        {wrongText?
-        <div>
-            <br/><br/>
-            <font color='green'>@SEC_Portal/console</font><br/>
-            $ {tmp}<br/>
-            <font color="red">couldn't identify '{tmp}'</font>
-        </div>:""}
-
-        {versionflag?
-        <div>
-            <br/><br/>
-            <font color='green'>@SEC_Portal/console</font><br/>
-            $ {tmp}<br/>
-            <font color="white">version 2.0.1   -last update 16 Sep, 22</font>
-        </div>:""}
-
-        <form onSubmit={consoleQuery}>
-        <br/><br/><font color='green'>@SEC_Portal/console</font><br/>
-            $ <input value={consoleText} onChange={(e)=>setConsoleText(e.target.value)} style={{background:"#000", border:"0px", outline:"none", color:"#fff", width:"90%", paddingBottom:"180px"}}/>
-        </form>
-        
-        
-    </pre></div>
+        {loading? <div align='center' style={{paddingTop:"30px"}}>
+            <CircularProgress/><br/>Please Wait
+        </div>:<>
+        <h2 align='center'>{activity.length} activities found!</h2>
+        <center><font style={{fontSize:"18px"}}>latest 200 activities is displayed</font></center>
+        <hr/>
+        {act}</>
+        }
+    </div>
+    </>
   )
 }

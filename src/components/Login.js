@@ -60,9 +60,10 @@ export default function Login() {
                 if (res.result == "done") {
                     localStorage.setItem("empID", empID);
                     localStorage.setItem("password", password);
+                    localStorage.setItem("sec_name", res.empName);
                     let toast = require("./toast_bar")
                     toast.msg("Login Successful", "green", 3000)
-                    save_activity("SEC", "EmployeeID "+empID+" logged in")
+                    save_activity("SEC", res.empName+" logged in")
                     navigate("/attendance");
                 }
                 else {

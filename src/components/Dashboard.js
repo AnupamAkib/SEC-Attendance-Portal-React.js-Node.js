@@ -8,6 +8,8 @@ import { useConfirm } from 'material-ui-confirm';
 import LinearProgress from '@mui/material/LinearProgress';
 import Title from './Title';
 import Footer from './Footer';
+import { CircularProgress } from '@mui/material';
+
 
 export default function Dashboard() {
     const navigate = useNavigate();
@@ -22,7 +24,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         document.body.style.backgroundColor = "#fff";
-    window.scrollTo(0, 0)
+        window.scrollTo(0, 0)
     }, [])
 
     const [geoLocation, setGeoLocation] = useState([])
@@ -167,6 +169,7 @@ export default function Dashboard() {
                 setLoading_attendance(false)
             }, (error) => {
                 console.log(error);
+                toast.msg("Please refresh the page", "", 5000)
             });
     }, [])
 
@@ -196,7 +199,6 @@ export default function Dashboard() {
     const confirm = useConfirm();
     const giveAttendance = (e) => {
         e.preventDefault();
-        save_activity("SEC", empName+" submitted his/her attendance");
         let time = getTime();
         if (status == "Present") {
             setStatus(getTime());
@@ -207,6 +209,7 @@ export default function Dashboard() {
         confirm({ description: "Attendance will be saved as \"" + status + "\" & you can not change it later." })
             .then(() => {
                 setLoading_attendance(true)
+                save_activity("SEC", `${empName} submitted his/her attendance as '${status}' `);
                 axios.post('https://flash-rym7.onrender.com/SEC/mark', {
                     //parameters
                     empID, day, month, year, time, status
@@ -268,51 +271,55 @@ export default function Dashboard() {
         <>
             <Title text="My Attendance" />
             <div className='container col-6'>
-                <div align='center' className='timedate'>
+                {/*<div align='center' className='timedate'>
                     <b>{getDay() + " " + getMonth() + ", " + getYear()}</b><br />
                     {getTime("with sec")}
-                </div><br />
+                    <h3 align="center">Welcome back!</h3>
+                </div><br />*/}
+                
 
                 {loading_attendance || loading_info ?
                     <div align='center'>
-                        {/*<br />
-                        <font size="5">Please Wait</font>
-                <LinearProgress />*/}
-                    <img src='dog-loading.gif' width='100px'/><br/>
+                        <br />
+                        <CircularProgress/><br/>
+                    {/*<img src='dog-loading.gif' width='100px'/><br/>*/}
                     <font size="4" color='gray'>
                         <b>
                         Connecting to Server<br/>
                         </b></font>
                         <font size="3" color='gray'>Refresh the page if it takes long time to load.</font>
-                    
                     </div>
                     :
                     <>
-                        <div className='attendanceButtonBody'>
-                            <table border="0" width="100%">
-                                <tbody>
-                                    <tr><td colSpan={2}>SEC Name: <b>{empName}</b></td></tr>
-                                    <tr><td colSpan={2}>EmployeeID: <b>{empID}</b></td></tr>
-                                    <tr><td colSpan={2}>Showroom: <b>{showroom_name}</b> (Dist: {distance.toFixed(0)} m)</td></tr>
-                                    <tr>
-                                        <td>Day Off : <b>{dayOff}</b></td>
-                                        <td align='right'><Button onClick={logoutMe} variant="outlined" size="small"><i className="fa fa-sign-out" style={{ marginRight: "5px" }}></i> LOGOUT</Button></td>
-                                    </tr>
-                                </tbody>
+                        <div className='attendanceButtonBody' style={{marginBottom:"20px", marginTop:"20px"}}>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <img src="/sec.png" width="70" style={{opacity:"0.5"}}/>
+                                    </td>
+                                    <td style={{paddingLeft:"10px"}}>
+                                        <h3 style={{color:"#000"}} className="">{empName.toUpperCase()}</h3>
+                                        <font style={{fontSize:"20px"}}>{showroom_name}</font>
+                                        {/* (in {distance.toFixed(0)} m)*/}
+                                    </td>
+                                </tr>
                             </table>
-
-
-                        </div><br />
+                            <div style={{padding:"15px 10px 5px 8px", borderTop:"0px solid #d0d0d0", fontSize:"18px"}}>
+                                <b>Employee ID:</b> {empID}<br/>
+                                <b>Day off :</b> {dayOff}
+                            </div>
+                        </div>
 
                         {alreadyAttendanceGiven ?
                             <>
                                 <center>
                                     <div className='attendanceButtonBody'>
-                                        <h4 align='center'>Todays Attendance</h4><hr />
-                                        <img src='done.png' width='90px' />
-                                        <h3><b>Attendance Submitted</b></h3>
+                                        <h4 align='center'>Today's Attendance</h4><hr />
+                                        {/*<img src='done.png' width='90px' />*/}
+                                        <i className="fa fa-check-square-o" style={{fontSize:"100px", color:"green"}}></i><br/>
+                                        <h3><b>Successfully Submitted</b></h3>
 
-                                        <table className="table table-bordered" width="100%" border="1px" cellSpacing="0px" cellPadding="9px">
+                                        <table className="table table-bordered" width="100%" border="1px" cellSpacing="0px" cellPadding="9px" style={{border:"1px solid #c9c9c9", boxShadow:"0 0 5px rgba(0, 0, 0, 0.20)"}}>
                                             <thead>
                                                 <tr align='center'>
                                                     <th width="50%">Date</th>
@@ -337,17 +344,17 @@ export default function Dashboard() {
                             :
                             <>
                                 <div className='attendanceButtonBody'>
-                                    <h4 align='center'>Todays Attendance</h4><hr />
+                                    <h4 align='center'>Today's Attendance</h4><hr />
                                     <form onSubmit={giveAttendance}>
                                         {
                                             (distance <= showroomLocation.range) ?
-                                                <Button style={{ background: "#06bf00", color: "white", padding: "15px 0px 15px 0px", fontSize: "23px", fontWeight: "bold", marginBottom: "5px" }} onClick={() => { setStatus("Present") }} disabled={loading_location ? true : false} type="submit" fullWidth>{loading_location ? "Locating showroom..." : "PRESENT"}</Button>
+                                                <Button className='attendance_btn' style={{ background: "#06bf00", color: "white", padding: "15px 0px 15px 0px", fontSize: "23px", marginBottom: "7px" }} onClick={() => { setStatus("Present") }} disabled={loading_location ? true : false} type="submit" fullWidth>{loading_location ? "Locating showroom..." : <><i className='fa fa-calendar-check-o' style={{marginRight:"9px"}}></i><b>PRESENT</b></>}</Button>
                                                 :
                                                 <Button style={{ marginBottom: "5px" }} fullWidth>{loading_your_location ? "Locating your position..." : <font color='red' size="4">You are <b>{(distance).toFixed(2)} meter </b>away from showroom</font>}</Button>
                                         }
                                         <br />
-                                        <Button style={{ background: "#1976d2", color: "white", padding: "15px 0px 15px 0px", fontSize: "23px", fontWeight: "bold", marginBottom: "5px" }} onClick={() => { setStatus("Day Off") }} type="submit" fullWidth>DAY OFF</Button><br />
-                                        <Button style={{ background: "#ac26ff", color: "#fff", padding: "15px 0px 15px 0px", fontSize: "23px", fontWeight: "bold" }} onClick={() => { setStatus("Sick Leave") }} type="submit" fullWidth>SICK LEAVE</Button><br />
+                                        <Button className='attendance_btn' style={{ background: "#1976d2", color: "white", padding: "15px 0px 15px 0px", fontSize: "23px", marginBottom: "7px" }} onClick={() => { setStatus("Day Off") }} type="submit" fullWidth><><i className='fa fa-calendar-minus-o' style={{marginRight:"10px"}}></i><b>DAY OFF</b></></Button><br />
+                                        <Button className='attendance_btn' style={{ background: "#707070", color: "#fff", padding: "15px 0px 15px 0px", fontSize: "23px" }} onClick={() => { setStatus("Sick Leave") }} type="submit" fullWidth><><i className='fa fa-calendar-times-o' style={{marginRight:"9px"}}></i><b>SICK LEAVE</b></></Button><br />
                                     </form>
                                 </div>
                                 <Statistics empID={empID} day={getDay()} month={getMonth()} year={getYear()} />
