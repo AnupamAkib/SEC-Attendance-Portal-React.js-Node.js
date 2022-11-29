@@ -222,6 +222,7 @@ export default function Dashboard() {
                             let toast = require("./toast_bar")
                             toast.msg("Attendance Submitted Successfully", "green", 3000)
                             localStorage.clear();
+                            navigate("/")
                         }
 
                     }, (error) => {
