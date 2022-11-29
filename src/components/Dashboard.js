@@ -221,6 +221,7 @@ export default function Dashboard() {
                             setLoading_attendance(false)
                             let toast = require("./toast_bar")
                             toast.msg("Attendance Submitted Successfully", "green", 3000)
+                            localStorage.clear();
                         }
 
                     }, (error) => {
