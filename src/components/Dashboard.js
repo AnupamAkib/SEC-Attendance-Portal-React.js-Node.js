@@ -221,8 +221,11 @@ export default function Dashboard() {
                             setLoading_attendance(false)
                             let toast = require("./toast_bar")
                             toast.msg("Attendance Submitted Successfully", "green", 3000)
-                            localStorage.clear();
-                            navigate("/")
+                            if(localStorage.getItem("sec_name")){}
+                            else{
+                                localStorage.clear();
+                                navigate("/");
+                            }
                         }
 
                     }, (error) => {
@@ -282,7 +285,7 @@ export default function Dashboard() {
 
                 {loading_attendance || loading_info ?
                     <div align='center'>
-                        <br />
+                        <br /><br/>
                         <CircularProgress/><br/>
                     {/*<img src='dog-loading.gif' width='100px'/><br/>*/}
                     <font size="4" color='gray'>
@@ -321,7 +324,7 @@ export default function Dashboard() {
                                         <i className="fa fa-check-square-o" style={{fontSize:"100px", color:"green"}}></i><br/>
                                         <h3><b>Successfully Submitted</b></h3>
 
-                                        <table className="table table-bordered" width="100%" border="1px" cellSpacing="0px" cellPadding="9px" style={{border:"1px solid #c9c9c9", boxShadow:"0 0 5px rgba(0, 0, 0, 0.20)"}}>
+                                        <table className="table table-bordered" width="100%" border="1px" cellSpacing="0px" cellPadding="9px" style={{border:"1px solid #bdbdbd"}}>
                                             <thead>
                                                 <tr align='center'>
                                                     <th width="50%">Date</th>
@@ -341,7 +344,9 @@ export default function Dashboard() {
 
                                     </div>
                                 </center>
-                                <Statistics empID={empID} day={getDay()} month={getMonth()} year={getYear()} />
+                                <div className='statistics'>
+                                    <Statistics empID={empID} day={getDay()} month={getMonth()} year={getYear()} />
+                                </div>
                             </>
                             :
                             <>
@@ -359,14 +364,13 @@ export default function Dashboard() {
                                         <Button className='attendance_btn' style={{ background: "#707070", color: "#fff", padding: "15px 0px 15px 0px", fontSize: "23px" }} onClick={() => { setStatus("Sick Leave") }} type="submit" fullWidth><><i className='fa fa-calendar-times-o' style={{marginRight:"9px"}}></i><b>SICK LEAVE</b></></Button><br />
                                     </form>
                                 </div>
-                                <Statistics empID={empID} day={getDay()} month={getMonth()} year={getYear()} />
+                                <div className='statistics'>
+                                    <Statistics empID={empID} day={getDay()} month={getMonth()} year={getYear()} />
+                                </div>
                             </>
                         }
                     </>
                 }
-
-                <img src='done.png' width='0px' />
-
             </div >
             {
                 (!loading_attendance && !loading_info) ? <Footer /> : ""

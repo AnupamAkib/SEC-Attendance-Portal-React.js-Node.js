@@ -79,7 +79,7 @@ const Header = () => {
   return (
     <React.Fragment>
       <AppBar sx={{ background: "#0052a3" }}  style={{zIndex:"11555"}}>
-        <Toolbar>
+        <Toolbar style={{padding:"10px 8px 8px 8px"}}>
           <font size='5' style={{marginLeft:"10px"}}>SEC PORTAL</font>
           
           {isMatch ? (

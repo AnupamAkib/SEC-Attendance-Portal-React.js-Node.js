@@ -93,8 +93,8 @@ export default function Statistics(props) {
         )
     }
     return (
-        <div style={{ padding: "15px" }}><br />
-            <h3 align='center'>Attendance (till {day + " " + month + ", " + year})</h3><hr />
+        <div style={{ padding: "15px" }}>
+            <h3 align='center'>Your Attendance (till {day + " " + month + ", " + year})</h3><hr />
             <font size='4'>
                 <h3>General Information:</h3>
                 Day Off:<b> {dayOff.length} Day{dayOff.length > 1 ? "s" : ""} </b>{dayOff.length ? <>({printArray(dayOff)})</> : ""} <br />
