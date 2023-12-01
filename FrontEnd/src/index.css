@@ -1,0 +1,143 @@
+body {
+  background-color: white;
+}
+
+.attendanceButtonBody {
+  background-image: linear-gradient(to right, whitesmoke, #ddd);
+  background-color: whitesmoke;
+  padding: 15px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  margin:5px;
+}
+
+.attendanceBtn {
+  padding: 20px 0px 20px 0px;
+  width: 100%;
+  font-size: 23px;
+  margin: 5px 0px 5px 0px;
+  font-weight: bold;
+  outline: none;
+  border: 0px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+}
+
+.attendanceBtn:hover {
+  background-color: #f0f0f0 !important;
+  transition: 0.2s;
+  color: #000 !important;
+}
+
+.timedate {
+  font-size: 23px;
+  background-color: whitesmoke;
+  padding: 15px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+.header {
+  background-image: linear-gradient(to right, darkblue, rgb(0, 0, 244));
+  background-color: darkblue;
+  color: white;
+  font-size: 22px;
+  padding: 10px;
+  font-weight: bold;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.4);
+}
+
+.login_box {
+  background-color: whitesmoke;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+  padding: 30px;
+  border-radius: 10px;
+}
+
+.addSEC_btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  height: 70px;
+  width: 70px;
+  font-size: 30px;
+  border-radius: 100%;
+  background-color: #1976d2;
+  opacity: 0.9;
+  border: 0px;
+  color: white;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+  outline: none;
+}
+
+.title_text {
+  background-color: rgb(0, 106, 212);
+  background-image: linear-gradient(to right, #0052a3, rgb(91, 181, 216));
+  font-size: 25px;
+  padding: 15px 0px 15px 0px;
+  font-weight: bold;
+  margin-top: -50px;
+  margin-bottom: 15px;
+  color: #fff;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.858);
+}
+.attendance_btn{
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.858);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+.textShadow{
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.858);
+}
+
+.footer {
+  background-color: #212121;
+  color: #fff;
+  padding: 20px;
+}
+
+.statistics{
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  margin:5px;
+  padding: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+  margin-top: 20px;
+}
+
+.links a {
+  font-size: 22px;
+  text-decoration: none;
+  color: white;
+  padding: 7px;
+}
+
+
+
+#table-wrapper {
+  position:relative;
+}
+#table-scroll {
+  height:100%;
+  overflow:auto !important;  
+  margin-top:20px;
+}
+#table-wrapper table {
+  width:100%;
+
+}
+
+#table-wrapper table thead th .text {
+  position:absolute !important;    
+  z-index:2;
+  height:100%px;
+  width:35%;
+  border:1px solid red;
+}
+
+@font-face {
+  font-family: appFont;
+  src: url("/public/font.ttf");
+}
+body {
+  font-family: appFont;
+}
+
